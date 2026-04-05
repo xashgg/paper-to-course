@@ -1,0 +1,151 @@
+<div class="module" id="module-06">
+  <div class="module-header">
+    <span class="module-number">06</span>
+    <h2 class="module-title">局限与展望</h2>
+    <p class="module-subtitle">Limitations &amp; Future Work</p>
+  </div>
+
+  <!-- 当前局限 -->
+  <h3>DeepSeek-R1 的局限</h3>
+  <p>论文坦诚地指出了当前方法的不足：</p>
+
+  <div class="step-cards">
+    <div class="step-card">
+      <div class="step-num">⚠️</div>
+      <div class="step-body">
+        <strong>语言一致性（Language Inconsistency）</strong>
+        <p>R1 和 R1-Zero 在推理过程中经常出现语言混合（中英文混杂）。这在数学和代码场景问题不大，但在开放域对话中影响体验。</p>
+        <p style="margin-top:0.5rem;"><strong>原因：</strong>训练数据以英文为主，但 RL 过程没有对语言一致性做惩罚。</p>
+      </div>
+    </div>
+    <div class="step-card">
+      <div class="step-num">⚠️</div>
+      <div class="step-body">
+        <strong>函数调用与格式输出</strong>
+        <p>R1 在 function calling、JSON 输出、text editing 等任务上表现不如专门的微调模型。这是因为 RL 阶段主要聚焦推理任务。</p>
+      </div>
+    </div>
+    <div class="step-card">
+      <div class="step-num">⚠️</div>
+      <div class="step-body">
+        <strong>模型规模门槛</strong>
+        <p>671B 参数的模型训练成本极高。虽然蒸馏到 7B 证明了可行性，但大模型的推理能力上限仍然是未知的。</p>
+      </div>
+    </div>
+    <div class="step-card">
+      <div class="step-num">⚠️</div>
+      <div class="step-body">
+        <strong>冷启动数据的质量依赖</strong>
+        <p>DeepSeek-R1 需要依赖 R1-Zero 的可读性改善数据做冷启动。这个数据 pipeline 目前依赖人工后处理，难以完全自动化。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 未来研究方向 -->
+  <h3>未来研究方向</h3>
+
+  <div class="icon-rows">
+    <div class="icon-row">
+      <div class="icon-circle" style="background: #7C3AED; color: white;">👁️</div>
+      <div>
+        <strong>多模态推理</strong>
+        <p>将纯 RL 推理方法扩展到图像、视频、音频等多模态场景。能否让模型通过纯 RL 学会"看图推理"？</p>
+      </div>
+    </div>
+    <div class="icon-row">
+      <div class="icon-circle" style="background: #D94F30; color: white;">🎯</div>
+      <div>
+        <strong>更精细的奖励信号</strong>
+        <p>当前主要用二元准确性奖励。能否设计更细粒度的过程奖励（每一步都给分）？形式化验证器能在这里发挥关键作用。</p>
+      </div>
+    </div>
+    <div class="icon-row">
+      <div class="icon-circle" style="background: #059669; color: white;">🤝</div>
+      <div>
+        <strong>多智能体 RL 推理</strong>
+        <p>让多个推理模型协作：一个负责提出假设，一个负责验证，一个负责整合。能否通过多智能体 RL 进一步提升推理质量？</p>
+      </div>
+    </div>
+    <div class="icon-row">
+      <div class="icon-circle" style="background: #F59E0B; color: white;">⚡</div>
+      <div>
+        <strong>推理效率优化</strong>
+        <p>DeepSeek-R1 生成的长思维链消耗大量推理算力。能否通过模型压缩或早停策略，在不损失性能的同时降低推理成本？</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 论文核心启示 -->
+  <h3>论文对整个领域的启示</h3>
+
+  <div class="formula-block animate-in">
+    <div class="formula-original">
+      <span class="formula-label">CORE TAKEAWAY</span>
+      <div class="formula-math">
+        "If the reward signal is correct,<br>
+        supervision is not necessary for reasoning.<br>
+        The model will figure out HOW to reason<br>
+        by itself — through pure trial and error."
+      </div>
+    </div>
+    <div class="formula-explanation">
+      <div class="formula-line">
+        <span class="formula-symbol">correct reward signal</span>
+        <span class="formula-english">不是教模型"什么是对的推理过程"，而是告诉模型"什么样的结果是好的"。模型自己会发现有效的推理策略。</span>
+      </div>
+      <div class="formula-line">
+        <span class="formula-symbol">pure trial and error</span>
+        <span class="formula-english">RL 本质上是"试错"——模型生成多个答案，正确的被强化，错误的被惩罚。正是这个过程让推理能力涌现出来。</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 总结 -->
+  <h3>总结</h3>
+  <div class="badge-list">
+    <div class="badge-item">
+      <span class="badge-code">🎯 核心贡献</span>
+      <span class="badge-desc">首次证明纯 RL 可以让大模型涌现出推理能力，无需任何监督数据</span>
+    </div>
+    <div class="badge-item">
+      <span class="badge-code">🔧 技术创新</span>
+      <span class="badge-desc">GRPO 算法 + 四阶段训练管道 + 冷启动策略</span>
+    </div>
+    <div class="badge-item">
+      <span class="badge-code">🚀 开源影响</span>
+      <span class="badge-desc">全系列开源（7B~671B），让任何人都能在此基础上继续研究</span>
+    </div>
+    <div class="badge-item">
+      <span class="badge-code">🔮 未来潜力</span>
+      <span class="badge-desc">纯 RL 推理框架可扩展到多模态、更复杂推理任务和多智能体场景</span>
+    </div>
+  </div>
+
+  <!-- 最终测验 -->
+  <div class="quiz-container animate-in" data-quiz-id="q6-1">
+    <div class="quiz-header">
+      <span class="quiz-icon">📝</span>
+      <h4>综合理解测试</h4>
+    </div>
+    <div class="quiz-question">
+      <p><strong>Q:</strong> DeepSeek-R1 对 AI 领域最重要的启示是什么？</p>
+    </div>
+    <div class="quiz-options">
+      <div class="quiz-option" data-correct="false">
+        <span class="option-letter">A</span>
+        <span class="option-text">大模型越大越好，所以应该继续增大模型规模</span>
+        <span class="quiz-feedback incorrect">✗ 错误。论文恰恰表明推理能力可以通过方法创新（而非单纯增大规模）来获得。</span>
+      </div>
+      <div class="quiz-option" data-correct="true">
+        <span class="option-letter">B</span>
+        <span class="option-text">正确的奖励信号比标注数据更重要——只要反馈足够好，模型能自己学会推理</span>
+        <span class="quiz-feedback correct">✓ 正确！这是 DeepSeek-R1 最深刻的启示，重新定义了"监督"的意义。</span>
+      </div>
+      <div class="quiz-option" data-correct="false">
+        <span class="option-letter">C</span>
+        <span class="option-text">CoT prompting 已经过时了，应该全部改用 RL</span>
+        <span class="quiz-feedback incorrect">✗ 错误。CoT prompting 仍然是有效工具，两者并不互斥。</span>
+      </div>
+    </div>
+  </div>
+</div>

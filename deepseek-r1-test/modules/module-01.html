@@ -1,0 +1,140 @@
+<div class="module" id="module-01">
+  <div class="module-header">
+    <span class="module-number">01</span>
+    <h2 class="module-title">问题与动机</h2>
+    <p class="module-subtitle">Problem &amp; Motivation</p>
+  </div>
+
+  <!-- 1. 问题背景 -->
+  <h3>大模型的推理困境</h3>
+  <p>大型语言模型（LLM）在自然语言生成上表现优异，但在需要<span class="term" data-definition="逻辑推导、多步计算、严密证明等需要系统性思考的任务。">复杂推理</span>的任务上却常常力不从心——数学证明、代码调试、科学分析。</p>
+
+  <div class="icon-rows">
+    <div class="icon-row">
+      <div class="icon-circle" style="background: #D94F30; color: white;">📐</div>
+      <div>
+        <strong>数学推理</strong>
+        <p>多步代数推导、几何证明、奥林匹克级别竞赛题——LLM 常给出"看起来对但错了"的答案</p>
+      </div>
+    </div>
+    <div class="icon-row">
+      <div class="icon-circle" style="background: #7C3AED; color: white;">🧩</div>
+      <div>
+        <strong>代码生成与调试</strong>
+        <p>复杂算法、多文件协调、边界条件处理——需要系统化思考而非模式匹配</p>
+      </div>
+    </div>
+    <div class="icon-row">
+      <div class="icon-circle" style="background: #059669; color: white;">🔬</div>
+      <div>
+        <strong>科学分析</strong>
+        <p>假设检验、实验设计、数据解读——需要领域知识与逻辑链条的深度结合</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. 现有方法瓶颈 -->
+  <h3>现有方法的三大瓶颈</h3>
+
+  <div class="step-cards">
+    <div class="step-card">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <strong>需要大量标注数据</strong>
+        <p>传统 RLHF 需要海量高质量的"人类反馈数据"——成本极高，且难以覆盖长思维链</p>
+      </div>
+    </div>
+    <div class="step-card">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <strong>必须先做 SFT（监督微调）</strong>
+        <p>现有最强推理模型（GPT-4o、Claude）都需要先经过 SFT 才能做 RL——RL 只是辅助工具</p>
+      </div>
+    </div>
+    <div class="step-card">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <strong>推理链质量不可控</strong>
+        <p>CoT prompting 可以引导思考，但模型自己无法验证推理步骤的正确性，容易"一本正经地胡说八道"</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. DeepSeek-R1 的目标 -->
+  <h3>DeepSeek-R1 的核心目标</h3>
+  <p>这篇论文要回答一个根本性问题：</p>
+
+  <div class="formula-block animate-in">
+    <div class="formula-original">
+      <span class="formula-label">RESEARCH QUESTION</span>
+      <div class="formula-math">
+        "Can a large language model develop <strong>emergent reasoning capabilities</strong><br>
+        through <strong>pure reinforcement learning</strong><br>
+        <strong>without any supervised fine-tuning</strong>?"
+      </div>
+    </div>
+    <div class="formula-explanation">
+      <div class="formula-line">
+        <span class="formula-symbol">pure RL</span>
+        <span class="formula-english">完全摒弃 SFT 阶段，直接用 RL 从零开始训练。这就像婴儿不学走路直接学跑步——理论上几乎不可能，但 DeepSeek-R1-Zero 做到了。</span>
+      </div>
+      <div class="formula-line">
+        <span class="formula-symbol">emergent reasoning</span>
+        <span class="formula-english">不是教模型"怎么推理"，而是创造条件让推理能力自己"涌现"出来。类似于 AlphaGo 不学人类棋谱，靠自我对弈达到超越人类水平。</span>
+      </div>
+      <div class="formula-line">
+        <span class="formula-symbol">冷启动策略</span>
+        <span class="formula-english">DeepSeek-R1 增加了冷启动阶段来解决 R1-Zero 的可读性问题——这是最终成功的关键一步。</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. 论文贡献 -->
+  <h3>论文贡献一览</h3>
+  <div class="badge-list">
+    <div class="badge-item">
+      <span class="badge-code">DeepSeek-R1-Zero</span>
+      <span class="badge-desc">首个纯 RL 训练的 671B 大模型，涌现出反思（Reflection）和长思维链能力</span>
+    </div>
+    <div class="badge-item">
+      <span class="badge-code">DeepSeek-R1</span>
+      <span class="badge-desc">冷启动 + 多阶段训练 + SFT，性能与 OpenAI o1 持平</span>
+    </div>
+    <div class="badge-item">
+      <span class="badge-code">GRPO Algorithm</span>
+      <span class="badge-desc">Group Relative Preference Optimization——比 PPO 更高效的大模型 RL 训练算法</span>
+    </div>
+    <div class="badge-item">
+      <span class="badge-code">Distillation 7 / 8 / 32</span>
+      <span class="badge-desc">将推理能力蒸馏到小模型，首次证明小模型也能涌现推理</span>
+    </div>
+  </div>
+
+  <!-- Quiz -->
+  <div class="quiz-container animate-in" data-quiz-id="q1-1">
+    <div class="quiz-header">
+      <span class="quiz-icon">📝</span>
+      <h4>理解检查</h4>
+    </div>
+    <div class="quiz-question">
+      <p><strong>Q:</strong> DeepSeek-R1-Zero 与 DeepSeek-R1 的核心区别是什么？</p>
+    </div>
+    <div class="quiz-options">
+      <div class="quiz-option" data-correct="true">
+        <span class="option-letter">A</span>
+        <span class="option-text">R1-Zero 直接用纯 RL，不经过 SFT；R1 增加了冷启动阶段改善可读性</span>
+        <span class="quiz-feedback correct">✓ 正确！R1-Zero 证明纯 RL 可行但可读性差；R1 通过冷启动 SFT 解决了这个问题。</span>
+      </div>
+      <div class="quiz-option" data-correct="false">
+        <span class="option-letter">B</span>
+        <span class="option-text">R1 使用更大的模型参数，R1-Zero 使用更小的模型</span>
+        <span class="quiz-feedback incorrect">✗ 错误。两者使用相同的 671B 模型架构。</span>
+      </div>
+      <div class="quiz-option" data-correct="false">
+        <span class="option-letter">C</span>
+        <span class="option-text">R1 采用 Claude 的 RLHF 框架，R1-Zero 采用自研 GRPO</span>
+        <span class="quiz-feedback incorrect">✗ 错误。R1-Zero 是 GRPO 的首次应用，两者最终都基于 GRPO。</span>
+      </div>
+    </div>
+  </div>
+</div>
