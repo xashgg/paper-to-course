@@ -212,7 +212,7 @@ function tableSlide(pres, slideNum, title, headers, rows, highlightRows) {
 
     slide.addTable(tableData, {
       x: 0.5, y: 1.0, w: 9,
-      colW: colCount === 6 ? [2.2, 1.5, 1.1, 1.1, 1.1, 2.0] :
+      colW: colCount === 6 ? [2.2, 1.2, 1.1, 1.1, 1.5, 1.9] :
             colCount === 4 ? [2.5, 1.2, 1.2, 4.1] :
             colCount === 3 ? [3, 3, 3] : Array(colCount).fill(9 / colCount),
       border: { pt: 0.5, color: C.midGray },
@@ -447,7 +447,7 @@ function createDeepSeekR1Presentation() {
     // Step 2
     slide.addShape(pres.shapes.OVAL, { x: 0.5, y: 2.0, w: 0.5, h: 0.5, fill: { color: C.coral } });
     slide.addText("2", { x: 0.5, y: 2.0, w: 0.5, h: 0.5, fontSize: 14, fontFace: "Arial", bold: true, color: C.white, align: "center", valign: "middle", margin: 0 });
-    slide.addText("奖励模型打分：[r₁=0, r₂=1, r₃=0, ..., r₈=0] — 两个正确", {
+    slide.addText("奖励模型打分：[r₁=0, r₂=1, r₃=0, r₄=0, r₅=1, r₆=0, r₇=0, r₈=0] — 两个正确", {
       x: 1.1, y: 2.05, w: 8.4, h: 0.4, fontSize: 13, fontFace: "Calibri", color: C.charcoal, align: "left", valign: "middle", margin: 0
     });
 
@@ -457,7 +457,7 @@ function createDeepSeekR1Presentation() {
     // Step 3
     slide.addShape(pres.shapes.OVAL, { x: 0.5, y: 3.0, w: 0.5, h: 0.5, fill: { color: C.coral } });
     slide.addText("3", { x: 0.5, y: 3.0, w: 0.5, h: 0.5, fontSize: 14, fontFace: "Arial", bold: true, color: C.white, align: "center", valign: "middle", margin: 0 });
-    slide.addText("GRPO 在组内标准化 Advantage（Aᵢ = rᵢ − mean(r)/std(r)），无需 Critic 网络", {
+    slide.addText("GRPO 在组内标准化 Advantage（Aᵢ = (rᵢ − μ) / σ），无需 Critic 网络", {
       x: 1.1, y: 3.05, w: 8.4, h: 0.4, fontSize: 13, fontFace: "Calibri", color: C.charcoal, align: "left", valign: "middle", margin: 0
     });
 
