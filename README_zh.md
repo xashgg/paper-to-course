@@ -13,8 +13,6 @@
 - **Markdown 文档** — 纯文本版本，代码块、LaTeX 公式、表格均保留
 - **PPTX 演示文稿** — 通用幻灯片系统，JSON 配置驱动，适用于所有工科论文
 
-> **示例课程：** [`examples/deepseek-r1-zh/`](examples/deepseek-r1-zh/) — DeepSeek-R1（Nature 2025）中文课程（HTML + PPTX）。
-
 ---
 
 ## ✨ 功能特色
@@ -66,13 +64,6 @@ cp -r paper-to-course ~/.claude/skills/
 paper-to-course/
 ├── SKILL.md                    # Claude Code 技能说明
 ├── README.md / README_zh.md    # 中英双语使用文档
-├── examples/                  # 示例课程（源码 + 生成输出）
-│   └── deepseek-r1-zh/       # DeepSeek-R1 示例
-│       ├── modules/           # HTML 模块源文件
-│       ├── slides-config.json # 通用幻灯片 JSON 配置
-│       ├── index.html         # 生成的 HTML 课程
-│       ├── presentation.pptx  # 生成的 PPTX
-│       └── screenshots/       # 模块截图（自动生成）
 ├── scripts/
 │   ├── build-all.js          # 统一流水线：HTML + MD + PPTX + 截图
 │   ├── generate-pptx.js     # 通用 PPTX 生成器（JSON 配置驱动）
@@ -91,16 +82,20 @@ paper-to-course/
 
 ```bash
 # 构建中文版
-node scripts/build-all.js deepseek-r1-zh --zh
+node scripts/build-all.js ./my-paper-course --zh --output ./output
 
 # 构建英文版
-node scripts/build-all.js deepseek-r1 --en
-
-# 构建双语
-node scripts/build-all.js deepseek-r1-zh
+node scripts/build-all.js ./my-paper-course --en
 
 # 仅生成 PPTX（HTML 已生成后）
-node scripts/build-all.js deepseek-r1-zh --slides-only
+node scripts/build-all.js ./output --slides-only
+```
+
+**期望的课程目录结构：**
+```
+my-paper-course/
+├── modules/                   # module-01.html, module-02.html, ...
+└── slides-config.json        # （可选）PPTX 幻灯片配置
 ```
 
 **前置依赖：**

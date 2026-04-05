@@ -1,9 +1,3 @@
-# Generated outputs
-examples/*/index.html
-examples/*/presentation.pptx
-examples/*/README.md
-examples/*/screenshots/*.png
-
 # OS
 .DS_Store
 Thumbs.db

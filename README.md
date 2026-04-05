@@ -13,7 +13,6 @@
 - A **Markdown document** — readable text version with code/formulas preserved
 - A **PPTX presentation** — clean 16-slide deck, generic for all engineering papers
 
-> **Live demo:** [`examples/deepseek-r1-zh/`](examples/deepseek-r1-zh/) — DeepSeek-R1 (Nature 2025) Chinese course (HTML + PPTX).
 
 ---
 
@@ -63,14 +62,7 @@ Turn this paper into a course
 ```
 paper-to-course/
 ├── SKILL.md                    # Claude Code skill instructions
-├── README.md / README_zh.md    # This file (bilingual)
-├── examples/                  # Example courses (source + generated outputs)
-│   └── deepseek-r1-zh/       # DeepSeek-R1 demo
-│       ├── modules/           # HTML module source files
-│       ├── slides-config.json # Generic slide config (JSON)
-│       ├── index.html         # Generated HTML course
-│       ├── presentation.pptx  # Generated PPTX
-│       └── screenshots/       # Module screenshots (auto-generated)
+├── README.md / README_zh.md    # Bilingual documentation
 ├── scripts/
 │   ├── build-all.js           # Unified pipeline: HTML + MD + PPTX + screenshots
 │   ├── generate-pptx.js      # Generic PPTX generator (paper-agnostic)
@@ -88,17 +80,21 @@ paper-to-course/
 ## 📦 Unified Build Pipeline
 
 ```bash
-# Build a specific paper (source in examples/, output in examples/<name>/)
-node scripts/build-all.js deepseek-r1-zh --zh
+# Build a course from your modules/ directory
+node scripts/build-all.js ./my-paper-course --zh --output ./output
 
-# Build English version
-node scripts/build-all.js deepseek-r1 --en
-
-# Build both
-node scripts/build-all.js deepseek-r1-zh
+# English version
+node scripts/build-all.js ./my-paper-course --en
 
 # PPTX only (after HTML built)
-node scripts/build-all.js deepseek-r1-zh --slides-only
+node scripts/build-all.js ./output --slides-only
+```
+
+**Expected course directory structure:**
+```
+my-paper-course/
+├── modules/                   # module-01.html, module-02.html, ...
+└── slides-config.json        # (optional) PPTX slide config
 ```
 
 **Prerequisites:**

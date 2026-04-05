@@ -2,270 +2,325 @@
 /**
  * paper-to-course — Unified Build Pipeline
  *
- * Generates all output formats for a paper course:
- *   1. HTML course (combined index.html)
- *   2. Markdown document (readable text version with code/formulas)
- *   3. PPTX presentation (from slides-config.json)
- *   4. Per-module screenshots (for PPTX embedding)
+ * Orchestrates the complete build: HTML + Markdown + PPTX from a course directory.
+ *
+ * Input:  course-dir/
+ *           _base.html
+ *           _footer.html
+ *           modules/*.html
+ *           slides-config.json     (optional — auto-generated if missing)
+ *           references/           (copied automatically if needed)
+ *
+ * Output: course-dir/
+ *           index.html            (assembled from _base + modules + _footer)
+ *           README.md             (Markdown version of the course)
+ *           slides.pptx          (PPTX presentation)
+ *           slides-config.json    (PPTX slide data, used for PPTX)
  *
  * Usage:
- *   node build-all.js <paper-name> [--zh] [--en] [--slides-only]
- *
- * Prerequisites:
- *   npm install -g pptxgenjs puppeteer-core
- *   Chrome or Chromium installed (set CHROME_BIN env var or use /usr/bin/google-chrome)
+ *   node build-all.js ./my-course          # builds all three outputs
+ *   node build-all.js ./my-course --html   # HTML only
+ *   node build-all.js ./my-course --md     # Markdown only
+ *   node build-all.js ./my-course --pptx   # PPTX only
  */
 
-const { execSync } = require("child_process");
 const path = require("path");
 const fs = require("fs");
-const os = require("os");
 
-// ─── Configuration ───────────────────────────────────────────────
-const CHROME_BIN = process.env.CHROME_BIN || "/usr/bin/google-chrome";
-const PUPPETEER_CORE_PATH = path.join(
-  os.homedir(),
-  ".nvm/versions/node/v24.13.0/lib/node_modules/puppeteer-core"
-);
-const PPTXGENJS_PATH = path.join(
-  os.homedir(),
-  ".nvm/versions/node/v24.13.0/lib/node_modules/pptxgenjs"
-);
+const SKILL_ROOT = path.dirname(__dirname);
+const SCRIPT_DIR = __dirname;
 
-// ─── Helpers ──────────────────────────────────────────────────────
-function run(cmd, opts = {}) {
+function resolve(...args) { return path.resolve(...args); }
+
+// ─── Step 1: Build HTML index.html ───────────────────────────
+function buildHtml(courseDir) {
+  const basePath = resolve(courseDir, "_base.html");
+  const footerPath = resolve(courseDir, "_footer.html");
+  const modulesDir = resolve(courseDir, "modules");
+
+  if (!fs.existsSync(basePath)) {
+    throw new Error(`_base.html not found in ${courseDir}`);
+  }
+  if (!fs.existsSync(modulesDir)) {
+    throw new Error(`modules/ directory not found in ${courseDir}`);
+  }
+
+  let base;
   try {
-    return execSync(cmd, {
-      encoding: "utf8",
-      stdio: opts.silent ? "pipe" : "inherit",
-      ...opts,
-    });
+    base = fs.readFileSync(basePath, "utf-8");
   } catch (e) {
-    if (!opts.silent) console.error("ERROR:", e.message);
+    throw new Error(`Failed to read _base.html: ${e.message}`);
+  }
+  const footer = fs.existsSync(footerPath)
+    ? fs.readFileSync(footerPath, "utf-8")
+    : "";
+
+  // Collect module files
+  const moduleFiles = fs.readdirSync(modulesDir)
+    .filter(f => f.endsWith(".html") && fs.statSync(resolve(modulesDir, f)).isFile())
+    .sort();
+
+  const moduleContents = moduleFiles.map(f => {
+    const fp = resolve(modulesDir, f);
+    if (!fs.statSync(fp).isFile()) throw new Error(`Not a file: ${fp}`);
+    return fs.readFileSync(fp, "utf-8");
+  });
+
+  // Extract title from base
+  const titleMatch = base.match(/<title>([\s\S]*?)<\/title>/i);
+  const title = titleMatch ? titleMatch[1].trim() : path.basename(courseDir);
+
+  // Replace COURSE_TITLE placeholder
+  base = base.replace(/COURSE_TITLE/g, title);
+
+  // Assemble
+  const indexHtml = base + "\n" + moduleContents.join("\n") + "\n" + footer;
+
+  const outPath = resolve(courseDir, "index.html");
+  fs.writeFileSync(outPath, indexHtml, "utf-8");
+  return outPath;
+}
+
+// ─── Step 2: Convert to Markdown ─────────────────────────────
+function buildMarkdown(courseDir) {
+  // Try to use html-to-md.js if jsdom is available
+  try {
+    const htmlToMdPath = resolve(SCRIPT_DIR, "html-to-md.js");
+    const indexPath = resolve(courseDir, "index.html");
+    const outPath = resolve(courseDir, "README.md");
+
+    if (!fs.existsSync(indexPath)) {
+      console.warn("⚠️  index.html not found — skipping Markdown generation");
+      return null;
+    }
+
+    // Dynamically require html-to-md logic
+    const htmlToMd = require(htmlToMdPath);
+
+    // Use a simple regex-based conversion if no jsdom
+    const indexHtml = fs.readFileSync(indexPath, "utf-8");
+    const md = htmlToMarkdown(indexHtml);
+
+    fs.writeFileSync(outPath, md, "utf-8");
+    return outPath;
+  } catch (e) {
+    // Fallback: simple HTML→MD conversion without jsdom
+    const indexPath = resolve(courseDir, "index.html");
+    if (!fs.existsSync(indexPath)) return null;
+
+    const html = fs.readFileSync(indexPath, "utf-8");
+    const md = htmlToMarkdown(html);
+    const outPath = resolve(courseDir, "README.md");
+    fs.writeFileSync(outPath, md, "utf-8");
+    return outPath;
+  }
+}
+
+// ─── Simple HTML → Markdown (no jsdom dependency) ────────────
+function htmlToMarkdown(html) {
+  let md = html
+    // Remove doctype and head
+    .replace(/<!DOCTYPE[^>]*>/gi, '')
+    .replace(/<head>[\s\S]*?<\/head>/gi, '')
+    .replace(/<nav[\s\S]*?<\/nav>/gi, '')
+    .replace(/<script[\s\S]*?<\/script>/gi, '')
+    .replace(/<style[\s\S]*?<\/style>/gi, '')
+    .replace(/<!--[\s\S]*?-->/g, '')
+    // Headings
+    .replace(/<h1[^>]*class="module-title"[^>]*>([\s\S]*?)<\/h1>/gi, (_, t) => '\n# ' + stripTags(t) + '\n')
+    .replace(/<h1[^>]*>([\s\S]*?)<\/h1>/gi, (_, t) => '\n## ' + stripTags(t) + '\n')
+    .replace(/<h2[^>]*>([\s\S]*?)<\/h2>/gi, (_, t) => '\n### ' + stripTags(t) + '\n')
+    .replace(/<h3[^>]*>([\s\S]*?)<\/h3>/gi, (_, t) => '\n#### ' + stripTags(t) + '\n')
+    // Module numbers
+    .replace(/<span[^>]*class="module-number"[^>]*>([\s\S]*?)<\/span>/gi, '')
+    // Subtitle
+    .replace(/<p[^>]*class="module-subtitle"[^>]*>([\s\S]*?)<\/p>/gi, (_, t) => '\n_' + stripTags(t) + '_\n')
+    // Screen headings
+    .replace(/<h2[^>]*class="screen-heading"[^>]*>([\s\S]*?)<\/h2>/gi, '\n## $1\n')
+    // Paragraphs
+    .replace(/<p[^>]*>([\s\S]*?)<\/p>/gi, (_, t) => {
+      const s = stripTags(t).trim();
+      return s ? '\n' + s + '\n' : '';
+    })
+    // Bold/italic
+    .replace(/<strong[^>]*>([\s\S]*?)<\/strong>/gi, '**$1**')
+    .replace(/<b[^>]*>([\s\S]*?)<\/b>/gi, '**$1**')
+    .replace(/<em[^>]*>([\s\S]*?)<\/em>/gi, '_$1_')
+    .replace(/<i[^>]*>([\s\S]*?)<\/i>/gi, '_$1_')
+    // Code
+    .replace(/<code[^>]*>([\s\S]*?)<\/code>/gi, '`$1`')
+    // Lists
+    .replace(/<ul[^>]*>([\s\S]*?)<\/ul>/gi, (_, t) => t.replace(/<li[^>]*>([\s\S]*?)<\/li>/gi, (_, it) => '- ' + stripTags(it).trim() + '\n'))
+    .replace(/<ol[^>]*>([\s\S]*?)<\/ol>/gi, (_, t) => {
+      let i = 0;
+      return t.replace(/<li[^>]*>([\s\S]*?)<\/li>/gi, (_, it) => (++i) + '. ' + stripTags(it).trim() + '\n');
+    })
+    // Tables
+    .replace(/<table[^>]*>([\s\S]*?)<\/table>/gi, (_, t) => {
+      const rows = [];
+      t.replace(/<tr[^>]*>([\s\S]*?)<\/tr>/gi, (_, tr) => {
+        const cells = [];
+        tr.replace(/<(th|td)[^>]*>([\s\S]*?)<\/(th|td)>/gi, (_, tag, c) => cells.push(stripTags(c).trim()));
+        if (cells.length) rows.push(cells);
+      });
+      if (!rows.length) return '';
+      let md = '\n';
+      const colCount = rows[0].length;
+      md += '| ' + rows[0].map(c => `**${c}**`).join(' | ') + ' |\n';
+      md += '| ' + rows[0].map(() => '---').join(' | ') + ' |\n';
+      rows.slice(1).forEach(row => {
+        md += '| ' + row.map(c => c).join(' | ') + ' |\n';
+      });
+      return md + '\n';
+    })
+    // Divs (treat as block)
+    .replace(/<div[^>]*>([\s\S]*?)<\/div>/gi, '\n$1\n')
+    // Blockquotes / callouts
+    .replace(/<blockquote[^>]*>([\s\S]*?)<\/blockquote>/gi, '\n> $1\n')
+    .replace(/<div[^>]*class="callout[^-]*"[^>]*>([\s\S]*?)<\/div>/gi, (_, t) => {
+      const content = stripTags(t).trim();
+      return content ? '\n> ' + content.replace(/\n/g, '\n> ') + '\n' : '';
+    })
+    // Remove remaining tags
+    .replace(/<[^>]+>/g, '')
+    // Clean entities
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&mdash;/g, '—')
+    .replace(/&ndash;/g, '–')
+    .replace(/&hellip;/g, '...')
+    // Clean up
+    .replace(/\n{4,}/g, '\n\n\n')
+    .replace(/^\n+/, '')
+    .trim();
+
+  return md;
+}
+
+function stripTags(html) {
+  return html
+    .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '')
+    .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '')
+    .replace(/<[^>]+>/g, '')
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&mdash;/g, '—')
+    .replace(/&mdash;/g, '—')
+    .replace(/&hellip;/g, '...')
+    .trim();
+}
+
+// ─── Step 3: Generate PPTX ───────────────────────────────────
+async function buildPptx(courseDir) {
+  // Check if pptxgenjs is available
+  let pptxgenAvailable = false;
+  try {
+    require("pptxgenjs");
+    pptxgenAvailable = true;
+  } catch (e) {
+    pptxgenAvailable = false;
+  }
+
+  if (!pptxgenAvailable) {
+    console.warn("⚠️  pptxgenjs not installed — skipping PPTX generation");
+    console.warn("   Install with: npm install -g pptxgenjs");
     return null;
   }
-}
 
-function ensureDir(dir) {
-  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-}
-
-// ─── Step 1: Build HTML index ────────────────────────────────────
-function buildHTML(courseDir, outputDir, refsDir) {
-  console.log("📄 Building HTML course...");
-  const combined = path.join(outputDir, "index.html");
-
-  let baseHTML = fs.readFileSync(path.join(refsDir, "_base.html"), "utf8");
-  const footerHTML = fs.existsSync(path.join(refsDir, "_footer.html"))
-    ? fs.readFileSync(path.join(refsDir, "_footer.html"), "utf8") : "";
-  const cssContent = fs.existsSync(path.join(refsDir, "styles.css"))
-    ? fs.readFileSync(path.join(refsDir, "styles.css"), "utf8") : "";
-  const jsContent = fs.existsSync(path.join(refsDir, "main.js"))
-    ? fs.readFileSync(path.join(refsDir, "main.js"), "utf8") : "";
-  const modulesDir = path.join(courseDir, "modules");
-
-  // Inline CSS and JS
-  baseHTML = baseHTML.replace(
-    `<link rel="stylesheet" href="styles.css">\n  <!-- INLINE_CSS -->`,
-    `<style>\n${cssContent}\n</style>`
-  );
-  baseHTML = baseHTML.replace(
-    `<script src="main.js" defer></script>\n  <!-- INLINE_JS -->`,
-    `<script>\n${jsContent}\n</script>`
-  );
-
-  const parts = [baseHTML];
-  const modules = fs.readdirSync(modulesDir)
-    .filter(f => f.startsWith("module-") && f.endsWith(".html"))
-    .sort();
-
-  for (const mod of modules) {
-    parts.push(fs.readFileSync(path.join(modulesDir, mod), "utf8"));
-  }
-  if (footerHTML) parts.push(footerHTML);
-
-  fs.writeFileSync(combined, parts.join("\n"), "utf8");
-  const size = (fs.statSync(combined).size / 1024).toFixed(1);
-  console.log(`  ✓ index.html (${size} KB)`);
-  return true;
-}
-
-// ─── Step 2: Build Markdown ───────────────────────────────────────
-function buildMarkdown(indexPath, outputDir) {
-  console.log("📝 Converting HTML → Markdown...");
-  try {
-    const { htmlToMarkdown } = require("./html-to-md.js");
-    const html = fs.readFileSync(indexPath, "utf8");
-    const md = htmlToMarkdown(html);
-    const mdPath = path.join(outputDir, "README.md");
-    fs.writeFileSync(mdPath, md, "utf8");
-    const size = (Buffer.byteLength(md, "utf8") / 1024).toFixed(1);
-    console.log(`  ✓ README.md (${size} KB)`);
-    return true;
-  } catch (e) {
-    console.error(`  ✗ Markdown conversion failed: ${e.message}`);
-    return false;
-  }
-}
-
-// ─── Step 3: Build PPTX from config ──────────────────────────────
-async function buildPPTX(outputDir) {
-  const configPath = path.join(outputDir, "slides-config.json");
+  const configPath = resolve(courseDir, "slides-config.json");
   if (!fs.existsSync(configPath)) {
-    console.log("  ⚠ No slides-config.json found — skipping PPTX");
-    return false;
+    console.warn(`⚠️  slides-config.json not found in ${courseDir} — skipping PPTX`);
+    console.warn("   (The LLM should have generated it alongside HTML modules)");
+    return null;
   }
 
-  console.log("📊 Building PPTX presentation...");
-  const pptxScript = path.join(outputDir, "generate-pptx.js");
+  const outputPath = resolve(courseDir, "slides.pptx");
+  const { build } = require(resolve(SCRIPT_DIR, "slides-builder.js"));
 
-  // Copy/generate PPTX script
-  const templateScript = path.join(__dirname, "generate-pptx.js");
-  fs.writeFileSync(pptxScript, fs.readFileSync(templateScript, "utf8")
-    .replace('require("pptxgenjs")', `require("${PPTXGENJS_PATH.replace(/\\/g, "\\\\")}")`));
-
-  const pptxPath = path.join(outputDir, "presentation.pptx");
-  run(`node "${pptxScript}" "${pptxPath}" --config "${configPath}"`, { cwd: __dirname });
-
-  if (fs.existsSync(pptxPath)) {
-    const size = (fs.statSync(pptxPath).size / 1024).toFixed(1);
-    console.log(`  ✓ presentation.pptx (${size} KB)`);
-    return true;
-  } else {
-    console.error("  ✗ PPTX generation failed");
-    return false;
-  }
+  const config = JSON.parse(fs.readFileSync(configPath, "utf-8"));
+  const result = await build(config, outputPath);
+  return result.fileName;
 }
 
-// ─── Step 4: Take screenshots of each module ─────────────────────
-async function buildScreenshots(courseDir, outputDir, refsDir) {
-  console.log("🖼️  Taking module screenshots...");
-  const shotsDir = path.join(outputDir, "screenshots");
-  ensureDir(shotsDir);
+// ─── Step 4: Copy references (if needed) ────────────────────
+function ensureReferences(courseDir) {
+  const refsDir = resolve(SCRIPT_DIR, "..", "references");
+  const targetRefs = resolve(courseDir, "references");
 
-  let puppeteer;
-  try {
-    puppeteer = require(PUPPETEER_CORE_PATH);
-  } catch {
-    console.error("  ✗ puppeteer-core not found. Run: npm install -g puppeteer-core");
-    return false;
-  }
-
-  let browser;
-  try {
-    browser = await puppeteer.launch({
-      executablePath: CHROME_BIN,
-      args: ["--headless=new", "--no-sandbox", "--disable-gpu"],
-    });
-  } catch (e) {
-    console.error(`  ✗ Failed to launch Chrome: ${e.message}`);
-    return false;
-  }
-
-  const baseHTML = fs.readFileSync(path.join(refsDir, "_base.html"), "utf8");
-  const footerHTML = fs.existsSync(path.join(refsDir, "_footer.html"))
-    ? fs.readFileSync(path.join(refsDir, "_footer.html"), "utf8") : "";
-  const cssContent = fs.existsSync(path.join(refsDir, "styles.css"))
-    ? fs.readFileSync(path.join(refsDir, "styles.css"), "utf8") : "";
-  const jsContent = fs.existsSync(path.join(refsDir, "main.js"))
-    ? fs.readFileSync(path.join(refsDir, "main.js"), "utf8") : "";
-  const modulesDir = path.join(courseDir, "modules");
-
-  let base = baseHTML
-    .replace(`<link rel="stylesheet" href="styles.css">\n  <!-- INLINE_CSS -->`, `<style>\n${cssContent}\n</style>`)
-    .replace(`<script src="main.js" defer></script>\n  <!-- INLINE_JS -->`, `<script>\n${jsContent}\n</script>`);
-
-  const modules = fs.readdirSync(modulesDir)
-    .filter(f => f.startsWith("module-") && f.endsWith(".html"))
-    .sort();
-
-  for (let i = 0; i < modules.length; i++) {
-    const modContent = fs.readFileSync(path.join(modulesDir, modules[i]), "utf8");
-    const standalone = base.replace("<!-- MODULE_CONTENT -->", modContent) + footerHTML;
-    const tmpFile = path.join(os.tmpdir(), `ptc_mod_${i}.html`);
-    fs.writeFileSync(tmpFile, standalone, "utf8");
-
-    const page = await browser.newPage();
-    await page.setViewport({ width: 1280, height: 720, deviceScaleFactor: 2 });
-    await page.goto(`file://${tmpFile}`, { waitUntil: "networkidle0" });
-    await page.screenshot({
-      path: path.join(shotsDir, `module-${String(i + 1).padStart(2, "0")}.png`),
-      fullPage: true
-    });
-    await page.close();
-    fs.unlinkSync(tmpFile);
-    console.log(`  ✓ module-${String(i + 1).padStart(2, "0")}.png`);
-  }
-
-  await browser.close();
-  return true;
+  const files = ["styles.css", "main.js", "_base.html", "_footer.html"];
+  files.forEach(f => {
+    const src = resolve(refsDir, f);
+    const dst = resolve(courseDir, f);
+    if (fs.existsSync(src) && !fs.existsSync(dst)) {
+      fs.copyFileSync(src, dst);
+    }
+  });
 }
 
-// ─── Main ─────────────────────────────────────────────────────────
+// ─── Main ───────────────────────────────────────────────────
 async function main() {
   const args = process.argv.slice(2);
-  const isZh = args.includes("--zh");
-  const isEn = args.includes("--en");
-  const slidesOnly = args.includes("--slides-only");
 
-  const buildZh = isZh || (!isZh && !isEn);
-  const buildEn = isEn || (!isZh && !isEn);
+  // Parse flags
+  const flags = {
+    html:  args.includes("--html") || !args.includes("--md") && !args.includes("--pptx"),
+    md:    args.includes("--md")  || !args.includes("--html") && !args.includes("--pptx"),
+    pptx:  args.includes("--pptx") || !args.includes("--html") && !args.includes("--md"),
+  };
 
-  const skillRoot = path.resolve(__dirname, "..");
-  const refsDir = path.join(skillRoot, "references");
+  // Get course dir (last non-flag argument)
+  const nonFlags = args.filter(a => !a.startsWith("--"));
+  const courseDir = nonFlags.length > 0 ? resolve(nonFlags[0]) : resolve(".");
 
-  console.log("\n🚀 paper-to-course Build Pipeline");
-  console.log("=".repeat(50));
-
-  if (buildEn) {
-    await buildCourse(
-      path.join(skillRoot, "examples", "deepseek-r1"),
-      "deepseek-r1", "en", refsDir, skillRoot, slidesOnly
-    );
+  if (!fs.existsSync(courseDir)) {
+    console.error(`❌ Directory not found: ${courseDir}`);
+    process.exit(1);
   }
 
-  if (buildZh) {
-    await buildCourse(
-      path.join(skillRoot, "examples", "deepseek-r1-zh"),
-      "deepseek-r1-zh", "zh", refsDir, skillRoot, slidesOnly
-    );
-  }
+  const courseName = path.basename(courseDir);
+  console.log(`\n📦 paper-to-course build pipeline`);
+  console.log(`   Course: ${courseName}`);
+  console.log(`   Output: ${courseDir}`);
+  console.log(`   Steps:  HTML=${flags.html ? '✓' : '-'} MD=${flags.md ? '✓' : '-'} PPTX=${flags.pptx ? '✓' : '-'}\n`);
 
-  console.log("\n✅ Build complete!\n");
+  const results = {};
+
+  try {
+    if (flags.html) {
+      process.stdout.write("   🏗️  Building index.html... ");
+      results.html = buildHtml(courseDir);
+      console.log(`✓`);
+    }
+
+    if (flags.md) {
+      process.stdout.write("   📝 Generating README.md... ");
+      results.md = buildMarkdown(courseDir);
+      if (results.md) console.log(`✓`); else console.log(`⚠ (skipped)`);
+    }
+
+    if (flags.pptx) {
+      process.stdout.write("   📊 Building slides.pptx... ");
+      results.pptx = await buildPptx(courseDir);
+      if (results.pptx) console.log(`✓`); else console.log(`⚠ (skipped)`);
+    }
+
+    console.log(`\n✅ Build complete!\n`);
+    if (results.html) console.log(`   HTML:   ${results.html}`);
+    if (results.md)   console.log(`   Markdown: ${results.md}`);
+    if (results.pptx) console.log(`   PPTX:   ${results.pptx}`);
+    console.log();
+  } catch (err) {
+    console.error(`\n❌ Build failed: ${err.message}`);
+    process.exit(1);
+  }
 }
 
-async function buildCourse(courseDir, paperName, lang, refsDir, skillRoot, slidesOnly) {
-  console.log(`\n📦 Building: ${paperName} (${lang})`);
-
-  const outputDir = path.join(skillRoot, "examples", paperName);
-  ensureDir(outputDir);
-
-  const modulesDir = path.join(courseDir, "modules");
-  if (!fs.existsSync(modulesDir)) {
-    console.error(`  ✗ No modules/ directory in ${courseDir}`);
-    return;
-  }
-
-  // Copy slides-config.json if present
-  const configSrc = path.join(courseDir, "slides-config.json");
-  const configDst = path.join(outputDir, "slides-config.json");
-  if (fs.existsSync(configSrc)) {
-    fs.copyFileSync(configSrc, configDst);
-  }
-
-  if (!slidesOnly) {
-    // Step 1: HTML
-    if (!buildHTML(courseDir, outputDir, refsDir)) return;
-
-    // Step 2: Markdown
-    buildMarkdown(path.join(outputDir, "index.html"), outputDir);
-  }
-
-  // Step 3: Screenshots
-  await buildScreenshots(courseDir, outputDir, refsDir);
-
-  // Step 4: PPTX
-  await buildPPTX(outputDir);
-}
-
-main().catch(console.error);
+main();
