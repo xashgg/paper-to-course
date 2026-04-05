@@ -13,7 +13,7 @@
 - **Markdown 文档** — 纯文本版本，代码块、LaTeX 公式、表格均保留
 - **PPTX 演示文稿** — 通用幻灯片系统，JSON 配置驱动，适用于所有工科论文
 
-> **示例课程：** [`examples/deepseek-r1-zh/`](examples/deepseek-r1-zh/) — DeepSeek-R1（Nature 2025）中文课程，包含 HTML + MD + PPTX。
+> **示例课程：** [`examples/deepseek-r1-zh/`](examples/deepseek-r1-zh/) — DeepSeek-R1（Nature 2025）中文课程（HTML + PPTX）。
 
 ---
 
@@ -66,11 +66,13 @@ cp -r paper-to-course ~/.claude/skills/
 paper-to-course/
 ├── SKILL.md                    # Claude Code 技能说明
 ├── README.md / README_zh.md    # 中英双语使用文档
-├── examples/                  # 示例课程
+├── examples/                  # 示例课程（源码 + 生成输出）
 │   └── deepseek-r1-zh/       # DeepSeek-R1 示例
 │       ├── modules/           # HTML 模块源文件
 │       ├── slides-config.json # 通用幻灯片 JSON 配置
-│       └── assets/            # CSS/JS（从 references/ 复制）
+│       ├── index.html         # 生成的 HTML 课程
+│       ├── presentation.pptx  # 生成的 PPTX
+│       └── screenshots/       # 模块截图（自动生成）
 ├── scripts/
 │   ├── build-all.js          # 统一流水线：HTML + MD + PPTX + 截图
 │   ├── generate-pptx.js     # 通用 PPTX 生成器（JSON 配置驱动）

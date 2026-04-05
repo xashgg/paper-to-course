@@ -1,10 +1,8 @@
-# Generated outputs (created by build-all.js)
-papers/
-deepseek-r1-zh/
-
-# Individual demo files (now in papers/)
-deepseek-r1-presentation.pptx
-deepseek-r1-presentation.pdf
+# Generated outputs
+examples/*/index.html
+examples/*/presentation.pptx
+examples/*/README.md
+examples/*/screenshots/*.png
 
 # OS
 .DS_Store

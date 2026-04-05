@@ -13,7 +13,7 @@
 - A **Markdown document** — readable text version with code/formulas preserved
 - A **PPTX presentation** — clean 16-slide deck, generic for all engineering papers
 
-> **Live demo:** [`examples/deepseek-r1-zh/`](examples/deepseek-r1-zh/) — DeepSeek-R1 (Nature 2025) Chinese course with HTML, MD, and PPTX.
+> **Live demo:** [`examples/deepseek-r1-zh/`](examples/deepseek-r1-zh/) — DeepSeek-R1 (Nature 2025) Chinese course (HTML + PPTX).
 
 ---
 
@@ -64,11 +64,13 @@ Turn this paper into a course
 paper-to-course/
 ├── SKILL.md                    # Claude Code skill instructions
 ├── README.md / README_zh.md    # This file (bilingual)
-├── examples/                  # Example courses
+├── examples/                  # Example courses (source + generated outputs)
 │   └── deepseek-r1-zh/       # DeepSeek-R1 demo
 │       ├── modules/           # HTML module source files
 │       ├── slides-config.json # Generic slide config (JSON)
-│       └── assets/            # CSS/JS/images (copied from references/)
+│       ├── index.html         # Generated HTML course
+│       ├── presentation.pptx  # Generated PPTX
+│       └── screenshots/       # Module screenshots (auto-generated)
 ├── scripts/
 │   ├── build-all.js           # Unified pipeline: HTML + MD + PPTX + screenshots
 │   ├── generate-pptx.js      # Generic PPTX generator (paper-agnostic)
@@ -86,7 +88,7 @@ paper-to-course/
 ## 📦 Unified Build Pipeline
 
 ```bash
-# Build a specific paper
+# Build a specific paper (source in examples/, output in examples/<name>/)
 node scripts/build-all.js deepseek-r1-zh --zh
 
 # Build English version

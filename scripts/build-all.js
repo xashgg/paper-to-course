@@ -237,7 +237,7 @@ async function main() {
 async function buildCourse(courseDir, paperName, lang, refsDir, skillRoot, slidesOnly) {
   console.log(`\n📦 Building: ${paperName} (${lang})`);
 
-  const outputDir = path.join(skillRoot, "papers", paperName);
+  const outputDir = path.join(skillRoot, "examples", paperName);
   ensureDir(outputDir);
 
   const modulesDir = path.join(courseDir, "modules");

@@ -94,11 +94,13 @@ PPTX 生成器完全基于 JSON 配置，**适用于所有工科论文**：
 paper-to-course/
 ├── SKILL.md                    # 本技能说明
 ├── README.md / README_zh.md    # 安装使用文档（中英双语）
-├── examples/                  # 示例课程
+├── examples/                  # 示例课程（源码 + 生成输出）
 │   └── deepseek-r1-zh/       # DeepSeek-R1 示例
 │       ├── modules/           # HTML 模块源文件
 │       ├── slides-config.json # 通用幻灯片配置
-│       └── assets/            # CSS/JS（从 references/ 复制）
+│       ├── index.html         # 生成的 HTML 课程
+│       ├── presentation.pptx  # 生成的 PPTX
+│       └── screenshots/       # 模块截图（自动生成）
 ├── scripts/
 │   ├── build-all.js          # 统一流水线：HTML + MD + PPTX + 截图
 │   ├── generate-pptx.js      # 通用 PPTX 生成器（JSON 配置驱动）
