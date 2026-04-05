@@ -9,7 +9,9 @@
 
 It parses the paper structure, designs a 6-module curriculum, and generates interactive elements: formula breakdowns, literature timelines, comparison tables, ablation diagrams, method chat animations, comprehension quizzes, and glossary tooltips.
 
-> **Live demo:** See it in action → [`deepseek-r1-test/`](deepseek-r1-test/) — a complete course on DeepSeek-R1 (Nature 2025), generated from the actual paper.
+> **Live demo (HTML):** See it in action → [`deepseek-r1-test/`](deepseek-r1-test/) — a complete course on DeepSeek-R1 (Nature 2025).
+>
+> **Live demo (PPTX + PDF):** [`deepseek-r1-presentation.pptx`](deepseek-r1-presentation.pptx) and [`deepseek-r1-presentation.pdf`](deepseek-r1-presentation.pdf) — a 16-slide group meeting presentation in clean white style.
 
 ---
 
@@ -73,19 +75,24 @@ xdg-open index.html   # Linux
 
 ```
 paper-to-course/
-├── SKILL.md                 # Claude Code skill instructions
-├── README.md                # This file
-├── LICENSE                  # MIT License
-├── deepseek-r1-test/       # ← Live demo: DeepSeek-R1 course (Nature 2025)
-│   ├── index.html           # Generated course — open in browser
-│   └── modules/             # Source modules
+├── SKILL.md                    # Claude Code skill instructions
+├── README.md                   # This file
+├── LICENSE                     # MIT License
+├── deepseek-r1-test/          # Live demo: DeepSeek-R1 HTML course (EN)
+│   ├── index.html             # Open in browser
+│   └── modules/               # Source modules
+├── deepseek-r1-test-zh/       # Live demo: DeepSeek-R1 HTML course (中文)
+├── deepseek-r1-presentation.pptx  # Live demo: PPTX (16 slides)
+├── deepseek-r1-presentation.pdf   # Live demo: PDF
+├── scripts/
+│   └── generate-pptx.js     # PPTX generator script
 └── references/
-    ├── styles.css           # Complete design system
-    ├── main.js              # Interactive engine
-    ├── build.sh             # HTML bundler
-    ├── _base.html           # HTML template
-    ├── _footer.html         # HTML footer
-    └── paper-elements.md    # 7 element implementation patterns
+    ├── styles.css            # Complete design system
+    ├── main.js               # Interactive engine
+    ├── build.sh              # HTML bundler
+    ├── _base.html            # HTML template
+    ├── _footer.html          # HTML footer
+    └── paper-elements.md     # 7 element implementation patterns
 ```
 
 ---
@@ -114,7 +121,26 @@ Unlike generic paper summaries, paper-to-course:
 
 ---
 
-## 🛠️ How it works
+## 🖥️ Group Meeting Presentations (PPTX + PDF)
+
+Generate a clean, minimal PPTX for paper presentations:
+
+```bash
+# Install dependency
+npm install -g pptxgenjs
+
+# Generate PPTX
+node scripts/generate-pptx.js paper-presentation.pptx
+
+# Convert to PDF
+libreoffice --headless --convert-to pdf paper-presentation.pptx --outdir .
+```
+
+Design: white background, charcoal headers, coral accents, Arial Black + Calibri fonts. 16 slides covering problem → timeline → method → experiments → conclusion.
+
+**Style:** Minimal and clean — white background throughout. Designed for academic group meetings where clarity beats decoration.
+
+
 
 The skill reads the paper (PDF or LaTeX), then:
 

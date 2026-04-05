@@ -99,6 +99,65 @@ course-name/
 6. 运行 `bash build.sh` 打包为 `index.html`
 7. 告知用户在浏览器中打开 `index.html` 即可查看
 
+## PPTX 演示文稿生成（组会汇报用）
+
+除了 HTML 课程，还可以生成用于组会汇报的 PPTX 演示文稿（简约白色风格）。
+
+### 使用方法
+
+1. 安装依赖：
+```bash
+npm install -g pptxgenjs
+```
+
+2. 生成 PPTX：
+```bash
+cd ~/.claude/skills/paper-to-course
+node scripts/generate-pptx.js output.pptx
+```
+
+3. 转换为 PDF（如需要）：
+```bash
+libreoffice --headless --convert-to pdf output.pptx --outdir .
+```
+
+### PPTX 设计风格
+
+- **背景**：纯白 (#FFFFFF)
+- **标题栏**：深炭灰 (#36454F)
+- **强调色**：珊瑚红 (#D94F30)
+- **卡片背景**：浅灰 (#F0F0F0)
+- **字体**：Arial Black（标题）+ Calibri（正文）
+- **布局**：16:9 宽屏
+
+### PPTX 幻灯片结构（16页）
+
+| 页码 | 内容 |
+|------|------|
+| 1 | 标题页 |
+| 2 | 汇报提纲 |
+| 3 | 研究背景 |
+| 4 | 现有方法的瓶颈 |
+| 5 | 核心研究问题 |
+| 6 | 发展脉络时间线 |
+| 7 | Benchmark 性能对比表 |
+| 8 | GRPO 算法详解（步骤流程） |
+| 9 | 四阶段训练管道 |
+| 10 | 奖励信号设计 |
+| 11 | 核心实验结果（大数字卡片） |
+| 12 | 消融实验（水平条形图） |
+| 13 | 涌现的高级推理行为（2×2 卡片） |
+| 14 | 蒸馏效果对比表 |
+| 15 | 局限性与未来方向（双栏布局） |
+| 16 | 总结与启示 |
+
+### 自定义 PPTX
+
+修改 `scripts/generate-pptx.js` 中的颜色常量和工作函数，可自定义：
+- 配色方案（修改 `C` 对象）
+- 幻灯片内容（修改对应 slide 函数）
+- 布局结构（修改卡片网格参数）
+
 ## 参考资源
 
 - `references/styles.css` — 完整设计系统和 CSS class
@@ -107,3 +166,4 @@ course-name/
 - `references/_base.html` — HTML 模板头部
 - `references/_footer.html` — HTML 模板尾部
 - `references/paper-elements.md` — 7 种论文专用交互元素的实现模式
+- `scripts/generate-pptx.js` — PPTX 演示文稿生成脚本
