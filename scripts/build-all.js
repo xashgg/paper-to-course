@@ -2,20 +2,18 @@
 /**
  * paper-to-course — Unified Build Pipeline
  *
- * Generates all output formats for a paper presentation:
+ * Generates all output formats for a paper course:
  *   1. HTML course (combined index.html)
- *   2. PDF (from HTML, via Chrome headless)
- *   3. Per-module screenshots (for PPTX)
- *   4. PPTX presentation (with embedded screenshots + rich content)
+ *   2. Markdown document (readable text version with code/formulas)
+ *   3. PPTX presentation (from slides-config.json)
+ *   4. Per-module screenshots (for PPTX embedding)
  *
  * Usage:
- *   node build-all.js <paper-name> [--zh]
- *
- * Output goes to: papers/<paper-name>/
+ *   node build-all.js <paper-name> [--zh] [--en] [--slides-only]
  *
  * Prerequisites:
  *   npm install -g pptxgenjs puppeteer-core
- *   Chrome or Chromium installed (google-chrome must be in PATH)
+ *   Chrome or Chromium installed (set CHROME_BIN env var or use /usr/bin/google-chrome)
  */
 
 const { execSync } = require("child_process");
@@ -23,7 +21,7 @@ const path = require("path");
 const fs = require("fs");
 const os = require("os");
 
-// ─── Configuration ────────────────────────────────────────────────
+// ─── Configuration ───────────────────────────────────────────────
 const CHROME_BIN = process.env.CHROME_BIN || "/usr/bin/google-chrome";
 const PUPPETEER_CORE_PATH = path.join(
   os.homedir(),
@@ -34,7 +32,7 @@ const PPTXGENJS_PATH = path.join(
   ".nvm/versions/node/v24.13.0/lib/node_modules/pptxgenjs"
 );
 
-// ─── Helpers ─────────────────────────────────────────────────────
+// ─── Helpers ──────────────────────────────────────────────────────
 function run(cmd, opts = {}) {
   try {
     return execSync(cmd, {
@@ -52,69 +50,31 @@ function ensureDir(dir) {
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 }
 
-function chromeHeadless(url, outputPath, options = {}) {
-  const {
-    format = "pdf",    // "pdf" or "png"
-    landscape = false,
-    scale = 1.0,
-    width = 1280,
-    height = 720,
-  } = options;
-
-  const tmpDir = os.tmpdir();
-  const tmpOut = path.join(tmpDir, `ptc_output_${Date.now()}.${format}`);
-
-  let cmd = `"${CHROME_BIN}" --headless=new --no-sandbox --disable-gpu`;
-
-  if (format === "pdf") {
-    cmd += ` --print-to-pdf="${tmpOut}" --print-to-pdf-no-header`;
-    if (landscape) cmd += " --print-to-pdf-landscape";
-  } else {
-    cmd += ` --screenshot="${tmpOut}" --window-size=${width},${height}`;
-  }
-
-  if (options.viewportWidth) cmd += ` --force-device-scale-factor=${scale}`;
-  cmd += ` "${url}"`;
-
-  const result = run(cmd, { silent: true });
-  if (fs.existsSync(tmpOut)) {
-    fs.copyFileSync(tmpOut, outputPath);
-    fs.unlinkSync(tmpOut);
-    return true;
-  }
-  return false;
-}
-
-// ─── Step 1: Build HTML index ─────────────────────────────────────
+// ─── Step 1: Build HTML index ────────────────────────────────────
 function buildHTML(courseDir, outputDir, refsDir) {
   console.log("📄 Building HTML course...");
   const combined = path.join(outputDir, "index.html");
 
-  const baseFile = path.join(refsDir, "_base.html");
-  const footerFile = path.join(refsDir, "_footer.html");
-  const stylesFile = path.join(refsDir, "styles.css");
-  const mainFile = path.join(refsDir, "main.js");
+  let baseHTML = fs.readFileSync(path.join(refsDir, "_base.html"), "utf8");
+  const footerHTML = fs.existsSync(path.join(refsDir, "_footer.html"))
+    ? fs.readFileSync(path.join(refsDir, "_footer.html"), "utf8") : "";
+  const cssContent = fs.existsSync(path.join(refsDir, "styles.css"))
+    ? fs.readFileSync(path.join(refsDir, "styles.css"), "utf8") : "";
+  const jsContent = fs.existsSync(path.join(refsDir, "main.js"))
+    ? fs.readFileSync(path.join(refsDir, "main.js"), "utf8") : "";
   const modulesDir = path.join(courseDir, "modules");
 
-  if (!fs.existsSync(baseFile)) {
-    console.error("  ✗ _base.html not found in references/");
-    return false;
-  }
+  // Inline CSS and JS
+  baseHTML = baseHTML.replace(
+    `<link rel="stylesheet" href="styles.css">\n  <!-- INLINE_CSS -->`,
+    `<style>\n${cssContent}\n</style>`
+  );
+  baseHTML = baseHTML.replace(
+    `<script src="main.js" defer></script>\n  <!-- INLINE_JS -->`,
+    `<script>\n${jsContent}\n</script>`
+  );
 
-  // Read base HTML
-  let baseHTML = fs.readFileSync(baseFile, "utf8");
-  const footerHTML = fs.existsSync(footerFile) ? fs.readFileSync(footerFile, "utf8") : "";
-
-  // Inline CSS and JS into base HTML
-  const cssContent = fs.existsSync(stylesFile) ? fs.readFileSync(stylesFile, "utf8") : "";
-  const jsContent = fs.existsSync(mainFile) ? fs.readFileSync(mainFile, "utf8") : "";
-
-  baseHTML = baseHTML.replace(`<link rel="stylesheet" href="styles.css">\n  <!-- INLINE_CSS -->`, `<style>\n${cssContent}\n</style>`);
-  baseHTML = baseHTML.replace(`<script src="main.js" defer></script>\n  <!-- INLINE_JS -->`, `<script>\n${jsContent}\n</script>`);
-
-  // Concatenate: _base.html + module-*.html + _footer.html
   const parts = [baseHTML];
-
   const modules = fs.readdirSync(modulesDir)
     .filter(f => f.startsWith("module-") && f.endsWith(".html"))
     .sort();
@@ -122,10 +82,7 @@ function buildHTML(courseDir, outputDir, refsDir) {
   for (const mod of modules) {
     parts.push(fs.readFileSync(path.join(modulesDir, mod), "utf8"));
   }
-
-  if (footerHTML) {
-    parts.push(footerHTML);
-  }
+  if (footerHTML) parts.push(footerHTML);
 
   fs.writeFileSync(combined, parts.join("\n"), "utf8");
   const size = (fs.statSync(combined).size / 1024).toFixed(1);
@@ -133,51 +90,64 @@ function buildHTML(courseDir, outputDir, refsDir) {
   return true;
 }
 
-// ─── Step 2: HTML → PDF ──────────────────────────────────────────
-function buildPDF(indexPath, outputPath) {
-  console.log("📕 Converting HTML → PDF...");
-  const url = `file://${indexPath}`;
-
-  if (chromeHeadless(url, outputPath, { format: "pdf", landscape: false })) {
-    const size = (fs.statSync(outputPath).size / 1024).toFixed(1);
-    console.log(`  ✓ ${path.basename(outputPath)} (${size} KB)`);
+// ─── Step 2: Build Markdown ───────────────────────────────────────
+function buildMarkdown(indexPath, outputDir) {
+  console.log("📝 Converting HTML → Markdown...");
+  try {
+    const { htmlToMarkdown } = require("./html-to-md.js");
+    const html = fs.readFileSync(indexPath, "utf8");
+    const md = htmlToMarkdown(html);
+    const mdPath = path.join(outputDir, "README.md");
+    fs.writeFileSync(mdPath, md, "utf8");
+    const size = (Buffer.byteLength(md, "utf8") / 1024).toFixed(1);
+    console.log(`  ✓ README.md (${size} KB)`);
     return true;
-  } else {
-    console.error("  ✗ PDF generation failed");
+  } catch (e) {
+    console.error(`  ✗ Markdown conversion failed: ${e.message}`);
     return false;
   }
 }
 
-// ─── Step 3: Take screenshots of each module ───────────────────
+// ─── Step 3: Build PPTX from config ──────────────────────────────
+async function buildPPTX(outputDir) {
+  const configPath = path.join(outputDir, "slides-config.json");
+  if (!fs.existsSync(configPath)) {
+    console.log("  ⚠ No slides-config.json found — skipping PPTX");
+    return false;
+  }
+
+  console.log("📊 Building PPTX presentation...");
+  const pptxScript = path.join(outputDir, "generate-pptx.js");
+
+  // Copy/generate PPTX script
+  const templateScript = path.join(__dirname, "generate-pptx.js");
+  fs.writeFileSync(pptxScript, fs.readFileSync(templateScript, "utf8")
+    .replace('require("pptxgenjs")', `require("${PPTXGENJS_PATH.replace(/\\/g, "\\\\")}")`));
+
+  const pptxPath = path.join(outputDir, "presentation.pptx");
+  run(`node "${pptxScript}" "${pptxPath}" --config "${configPath}"`, { cwd: __dirname });
+
+  if (fs.existsSync(pptxPath)) {
+    const size = (fs.statSync(pptxPath).size / 1024).toFixed(1);
+    console.log(`  ✓ presentation.pptx (${size} KB)`);
+    return true;
+  } else {
+    console.error("  ✗ PPTX generation failed");
+    return false;
+  }
+}
+
+// ─── Step 4: Take screenshots of each module ─────────────────────
 async function buildScreenshots(courseDir, outputDir, refsDir) {
   console.log("🖼️  Taking module screenshots...");
   const shotsDir = path.join(outputDir, "screenshots");
   ensureDir(shotsDir);
 
-  const baseFile = path.join(refsDir, "_base.html");
-  const footerFile = path.join(refsDir, "_footer.html");
-  const stylesFile = path.join(refsDir, "styles.css");
-  const mainFile = path.join(refsDir, "main.js");
-  const modulesDir = path.join(courseDir, "modules");
-  const shotsBase = path.join(shotsDir, "module");
-
-  let baseHTML = fs.readFileSync(baseFile, "utf8");
-  const footerHTML = fs.existsSync(footerFile) ? fs.readFileSync(footerFile, "utf8") : "";
-  const cssContent = fs.existsSync(stylesFile) ? fs.readFileSync(stylesFile, "utf8") : "";
-  const jsContent = fs.existsSync(mainFile) ? fs.readFileSync(mainFile, "utf8") : "";
-  baseHTML = baseHTML.replace(`<link rel="stylesheet" href="styles.css">\n  <!-- INLINE_CSS -->`, `<style>\n${cssContent}\n</style>`);
-  baseHTML = baseHTML.replace(`<script src="main.js" defer></script>\n  <!-- INLINE_JS -->`, `<script>\n${jsContent}\n</script>`);
-
-  const modules = fs.readdirSync(modulesDir)
-    .filter(f => f.startsWith("module-") && f.endsWith(".html"))
-    .sort();
-
-  let puppeteer = null;
+  let puppeteer;
   try {
     puppeteer = require(PUPPETEER_CORE_PATH);
   } catch {
     console.error("  ✗ puppeteer-core not found. Run: npm install -g puppeteer-core");
-    console.error("  ✗ Skipping screenshots. Install Chrome/Chromium for full support.");
     return false;
   }
 
@@ -192,120 +162,110 @@ async function buildScreenshots(courseDir, outputDir, refsDir) {
     return false;
   }
 
-  for (let i = 0; i < modules.length; i++) {
-    const modFile = path.join(modulesDir, modules[i]);
-    const modContent = fs.readFileSync(modFile, "utf8");
-    const standalone = baseHTML.replace("<!-- MODULE_CONTENT -->", modContent) + footerHTML;
+  const baseHTML = fs.readFileSync(path.join(refsDir, "_base.html"), "utf8");
+  const footerHTML = fs.existsSync(path.join(refsDir, "_footer.html"))
+    ? fs.readFileSync(path.join(refsDir, "_footer.html"), "utf8") : "";
+  const cssContent = fs.existsSync(path.join(refsDir, "styles.css"))
+    ? fs.readFileSync(path.join(refsDir, "styles.css"), "utf8") : "";
+  const jsContent = fs.existsSync(path.join(refsDir, "main.js"))
+    ? fs.readFileSync(path.join(refsDir, "main.js"), "utf8") : "";
+  const modulesDir = path.join(courseDir, "modules");
 
+  let base = baseHTML
+    .replace(`<link rel="stylesheet" href="styles.css">\n  <!-- INLINE_CSS -->`, `<style>\n${cssContent}\n</style>`)
+    .replace(`<script src="main.js" defer></script>\n  <!-- INLINE_JS -->`, `<script>\n${jsContent}\n</script>`);
+
+  const modules = fs.readdirSync(modulesDir)
+    .filter(f => f.startsWith("module-") && f.endsWith(".html"))
+    .sort();
+
+  for (let i = 0; i < modules.length; i++) {
+    const modContent = fs.readFileSync(path.join(modulesDir, modules[i]), "utf8");
+    const standalone = base.replace("<!-- MODULE_CONTENT -->", modContent) + footerHTML;
     const tmpFile = path.join(os.tmpdir(), `ptc_mod_${i}.html`);
     fs.writeFileSync(tmpFile, standalone, "utf8");
 
-    const shotPath = `${shotsBase}-${String(i + 1).padStart(2, "0")}.png`;
     const page = await browser.newPage();
     await page.setViewport({ width: 1280, height: 720, deviceScaleFactor: 2 });
     await page.goto(`file://${tmpFile}`, { waitUntil: "networkidle0" });
-    await page.screenshot({ path: shotPath, fullPage: true });
+    await page.screenshot({
+      path: path.join(shotsDir, `module-${String(i + 1).padStart(2, "0")}.png`),
+      fullPage: true
+    });
     await page.close();
     fs.unlinkSync(tmpFile);
     console.log(`  ✓ module-${String(i + 1).padStart(2, "0")}.png`);
   }
+
   await browser.close();
   return true;
 }
 
-// ─── Step 4: Build PPTX with screenshots ───────────────────────
-async function buildPPTX(courseDir, outputDir, pptxScript, pptxContent) {
-  console.log("📊 Building PPTX presentation...");
-
-  // Patch the script to use absolute paths for modules
-  pptxContent = pptxContent
-    .replace('require("pptxgenjs")', `require("${PPTXGENJS_PATH.replace(/\\/g, "\\\\")}")`);
-
-  // Write course-specific PPTX generator
-  const scriptFile = path.join(outputDir, "generate-pptx.js");
-  fs.writeFileSync(scriptFile, pptxContent, "utf8");
-
-  const pptxPath = path.join(outputDir, "presentation.pptx");
-
-  const result = run(`node "${scriptFile}" "${pptxPath}"`, { cwd: __dirname });
-
-  if (fs.existsSync(pptxPath)) {
-    const size = (fs.statSync(pptxPath).size / 1024).toFixed(1);
-    console.log(`  ✓ presentation.pptx (${size} KB)`);
-    return true;
-  } else {
-    console.error("  ✗ PPTX generation failed");
-    return false;
-  }
-}
-
-// ─── Main Pipeline ────────────────────────────────────────────────
+// ─── Main ─────────────────────────────────────────────────────────
 async function main() {
   const args = process.argv.slice(2);
   const isZh = args.includes("--zh");
   const isEn = args.includes("--en");
+  const slidesOnly = args.includes("--slides-only");
 
-  // Default: build both EN and ZH if no flag specified
   const buildZh = isZh || (!isZh && !isEn);
   const buildEn = isEn || (!isZh && !isEn);
 
   const skillRoot = path.resolve(__dirname, "..");
   const refsDir = path.join(skillRoot, "references");
 
-  console.log("\n🚀 paper-to-course Unified Build Pipeline");
+  console.log("\n🚀 paper-to-course Build Pipeline");
   console.log("=".repeat(50));
 
   if (buildEn) {
-    await buildCourse(path.join(skillRoot, "deepseek-r1-test"), "deepseek-r1", "en", refsDir, skillRoot);
+    await buildCourse(
+      path.join(skillRoot, "examples", "deepseek-r1"),
+      "deepseek-r1", "en", refsDir, skillRoot, slidesOnly
+    );
   }
 
   if (buildZh) {
-    await buildCourse(path.join(skillRoot, "deepseek-r1-zh"), "deepseek-r1-zh", "zh", refsDir, skillRoot);
+    await buildCourse(
+      path.join(skillRoot, "examples", "deepseek-r1-zh"),
+      "deepseek-r1-zh", "zh", refsDir, skillRoot, slidesOnly
+    );
   }
 
   console.log("\n✅ Build complete!\n");
 }
 
-async function buildCourse(courseDir, paperName, lang, refsDir, skillRoot) {
+async function buildCourse(courseDir, paperName, lang, refsDir, skillRoot, slidesOnly) {
   console.log(`\n📦 Building: ${paperName} (${lang})`);
 
   const outputDir = path.join(skillRoot, "papers", paperName);
   ensureDir(outputDir);
 
-  // Copy reference files if not present
-  const requiredFiles = ["_base.html", "_footer.html", "styles.css", "main.js"];
-  for (const f of requiredFiles) {
-    const src = path.join(refsDir, f);
-    if (!fs.existsSync(src)) {
-      console.error(`  ✗ Missing reference file: ${f}`);
-      return;
-    }
-  }
-
-  // Ensure modules dir exists
   const modulesDir = path.join(courseDir, "modules");
   if (!fs.existsSync(modulesDir)) {
     console.error(`  ✗ No modules/ directory in ${courseDir}`);
-    console.error(`  ✗ Run the skill first to generate the HTML modules.`);
     return;
   }
 
-  // Step 1: Build HTML
-  if (!buildHTML(courseDir, outputDir, refsDir)) return;
+  // Copy slides-config.json if present
+  const configSrc = path.join(courseDir, "slides-config.json");
+  const configDst = path.join(outputDir, "slides-config.json");
+  if (fs.existsSync(configSrc)) {
+    fs.copyFileSync(configSrc, configDst);
+  }
 
-  // Step 2: HTML → PDF
-  const pdfPath = path.join(outputDir, `${paperName}.pdf`);
-  buildPDF(path.join(outputDir, "index.html"), pdfPath);
+  if (!slidesOnly) {
+    // Step 1: HTML
+    if (!buildHTML(courseDir, outputDir, refsDir)) return;
+
+    // Step 2: Markdown
+    buildMarkdown(path.join(outputDir, "index.html"), outputDir);
+  }
 
   // Step 3: Screenshots
   await buildScreenshots(courseDir, outputDir, refsDir);
 
   // Step 4: PPTX
-  const pptxScript = path.join(skillRoot, "scripts", "generate-pptx.js");
-  if (fs.existsSync(pptxScript)) {
-    const pptxContent = fs.readFileSync(pptxScript, "utf8");
-    await buildPPTX(courseDir, outputDir, pptxScript, pptxContent);
-  }
+  await buildPPTX(outputDir);
 }
 
 main().catch(console.error);
