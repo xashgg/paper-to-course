@@ -1,0 +1,155 @@
+<div class="module" id="module-02">
+  <div class="module-header">
+    <span class="module-number">02</span>
+    <h2 class="module-title">发展脉络</h2>
+    <p class="module-subtitle">Literature Timeline</p>
+  </div>
+
+  <p>LLM 推理能力的演进经历了四个关键阶段，每一次都突破了上一步的瓶颈。让我们用时间线回顾这条路径。</p>
+
+  <div class="timeline-container animate-in">
+    <div class="timeline-line"></div>
+
+    <div class="timeline-item" data-year="2022">
+      <div class="timeline-dot"></div>
+      <div class="timeline-card">
+        <span class="timeline-year">2022</span>
+        <h4>Chain-of-Thought Prompting</h4>
+        <p class="timeline-desc">Wei et al. 发现：让模型"一步步思考"（CoT），比直接给答案效果好得多。这是推理增强的开端——但这只是 prompting 技巧，不能真正教会模型推理。</p>
+        <div class="timeline-method-tag">CoT Prompting</div>
+      </div>
+    </div>
+
+    <div class="timeline-item" data-year="2022">
+      <div class="timeline-dot"></div>
+      <div class="timeline-card">
+        <span class="timeline-year">2022</span>
+        <h4>RLHF / InstructGPT</h4>
+        <p class="timeline-desc">OpenAI 通过人类反馈（RLHF）训练 InstructGPT，让模型学会遵循指令。但 RLHF 依赖大量人工标注的偏好数据，成本极高。</p>
+        <div class="timeline-method-tag">RLHF</div>
+      </div>
+    </div>
+
+    <div class="timeline-item" data-year="2023">
+      <div class="timeline-dot"></div>
+      <div class="timeline-card">
+        <span class="timeline-year">2023</span>
+        <h4>GPT-4 + Tool Use</h4>
+        <p class="timeline-desc">GPT-4 展示了强大的推理能力，但本质上仍是 SFT + RLHF 的产物。Code Interpreter 等工具帮助模型"作弊"——用外部工具弥补推理不足。</p>
+        <div class="timeline-method-tag">SFT + RLHF</div>
+      </div>
+    </div>
+
+    <div class="timeline-item" data-year="2024">
+      <div class="timeline-dot"></div>
+      <div class="timeline-card">
+        <span class="timeline-year">2024.09</span>
+        <h4>OpenAI o1 — Extended Thinking</h4>
+        <p class="timeline-desc">OpenAI 推出 o1，首次在推理时引入"思考 token"机制，在 AIME 数学竞赛上达到 74.6% 准确率。但模型内部如何实现推理仍是黑箱。</p>
+        <div class="timeline-method-tag">Extended Thinking</div>
+      </div>
+    </div>
+
+    <div class="timeline-item" data-year="2024">
+      <div class="timeline-dot"></div>
+      <div class="timeline-card">
+        <span class="timeline-year">2024.08</span>
+        <h4>AlphaProof (DeepMind)</h4>
+        <p class="timeline-desc">DeepMind 用形式化验证器 + RL 在 IMO 数学竞赛题上达到银牌水平。验证器的准确性是瓶颈——但证明了 RL 在形式化数学领域的潜力。</p>
+        <div class="timeline-method-tag">Formal Verification + RL</div>
+      </div>
+    </div>
+
+    <div class="timeline-item" data-year="2025">
+      <div class="timeline-dot"></div>
+      <div class="timeline-card">
+        <span class="timeline-year">2025.01</span>
+        <h4>DeepSeek-R1-Zero — 纯 RL</h4>
+        <p class="timeline-desc"><strong>本文关键突破：</strong>DeepSeek-R1-Zero 完全不用 SFT，纯 RL 训练，涌现出反思能力。这是领域内首次证明"推理可以不依赖标注数据涌现出来"。</p>
+        <div class="timeline-method-tag">Pure RL ✅</div>
+      </div>
+    </div>
+
+    <div class="timeline-item" data-year="2025">
+      <div class="timeline-dot"></div>
+      <div class="timeline-card">
+        <span class="timeline-year">2025.01</span>
+        <h4>DeepSeek-R1 — 冷启动 + 多阶段</h4>
+        <p class="timeline-desc">DeepSeek-R1 增加冷启动阶段（高质量 SFT 数据），通过四阶段训练，在推理 benchmark 上与 o1 持平，并开源全系列模型（7B~671B）。</p>
+        <div class="timeline-method-tag">Cold Start + RL + SFT</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 演进规律 -->
+  <h3>演进规律：从"教"到"涌现"</h3>
+  <div class="flow-steps">
+    <div class="flow-step">
+      <div class="flow-step-num">1</div>
+      <p>先学后用<br>(SFT 先行)</p>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">
+      <div class="flow-step-num">2</div>
+      <p>用外部工具<br>弥补推理不足</p>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">
+      <div class="flow-step-num">3</div>
+      <p>推理时<br>延长思考</p>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">
+      <div class="flow-step-num">4</div>
+      <p>纯 RL<br>推理涌现<br><strong style="color: var(--color-accent);">DeepSeek-R1</strong></p>
+    </div>
+  </div>
+
+  <div class="formula-block animate-in">
+    <div class="formula-original">
+      <span class="formula-label">核心洞察</span>
+      <div class="formula-math">
+        所有先前方法都需要<strong>标注推理数据</strong>（SFT）。<br>
+        R1-Zero 证明：只要<strong>奖励信号正确</strong>，<br>
+        推理能力就会<strong>无需监督地涌现</strong>。
+      </div>
+    </div>
+    <div class="formula-explanation">
+      <div class="formula-line">
+        <span class="formula-symbol">正确的奖励信号</span>
+        <span class="formula-english">R1-Zero 使用的奖励信号非常简单：正确性（outcome reward）——模型必须产生正确答案才能获得奖励。这比教模型"怎么推理"要简单得多。</span>
+      </div>
+      <div class="formula-line">
+        <span class="formula-symbol">推理涌现</span>
+        <span class="formula-english">模型自发地学会了"反思"——当发现中间步骤不对时，会回退重新思考。这种行为从未被显式教过，是 RL 过程中涌现的。</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="quiz-container animate-in" data-quiz-id="q2-1">
+    <div class="quiz-header">
+      <span class="quiz-icon">📝</span>
+      <h4>理解检查</h4>
+    </div>
+    <div class="quiz-question">
+      <p><strong>Q:</strong> 为什么 DeepSeek-R1-Zero 被认为是领域的关键突破？</p>
+    </div>
+    <div class="quiz-options">
+      <div class="quiz-option" data-correct="false">
+        <span class="option-letter">A</span>
+        <span class="option-text">它使用了比 OpenAI o1 更多的标注数据</span>
+        <span class="quiz-feedback incorrect">✗ 错误。R1-Zero 恰恰是完全不用标注数据的。</span>
+      </div>
+      <div class="quiz-option" data-correct="true">
+        <span class="option-letter">B</span>
+        <span class="option-text">它首次证明推理能力可以通过纯 RL 从零涌现，不需要任何监督数据</span>
+        <span class="quiz-feedback correct">✓ 正确！这是从未有人做到过的。</span>
+      </div>
+      <div class="quiz-option" data-correct="false">
+        <span class="option-letter">C</span>
+        <span class="option-text">它训练了比 o1 更大的模型</span>
+        <span class="quiz-feedback incorrect">✗ 错误。模型规模相近，但方法论完全不同。</span>
+      </div>
+    </div>
+  </div>
+</div>
