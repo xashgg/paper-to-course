@@ -579,7 +579,7 @@ function createDeepSeekR1Presentation() {
       title: "格式奖励",
       color: C.coral,
       text: [
-        "强制 &lt;think&gt;...&lt;/think&gt; 标签",
+        "强制 <think>...</think> 标签",
         "确保输出可解析",
         "鼓励更完整的思考链",
       ]

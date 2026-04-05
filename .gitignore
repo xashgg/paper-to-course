@@ -1,0 +1,17 @@
+# Generated outputs (created by build-all.js)
+papers/
+deepseek-r1-zh/
+
+# Individual demo files (now in papers/)
+deepseek-r1-presentation.pptx
+deepseek-r1-presentation.pdf
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+*.swp
+*.swo
+.vscode/
+.idea/
