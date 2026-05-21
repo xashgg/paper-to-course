@@ -1,226 +1,155 @@
 # paper-to-course
 
-> Transform any academic paper into a beautiful, interactive single-page HTML course.
+> Transform any academic paper into an interactive HTML course, Markdown study notes, and PPTX slides.
 
-A [Claude Code](https://claude.ai/code) skill that converts research papers into self-contained interactive courses — with scroll-based navigation, formula breakdowns, literature timelines, method comparisons, ablation diagrams, and comprehension quizzes.
+**paper-to-course** is a Codex-ready skill for turning research papers into teaching and study materials. It produces a self-contained scroll-based course with formula breakdowns, literature timelines, method comparisons, ablation diagrams, component chats, quizzes, plus matching Markdown notes and a seminar-style slide deck.
 
-**Target users:** researchers who need to quickly understand a paper's contributions, and students/newcomers learning a new field through the lens of a specific paper.
+**Target users:** researchers who need to quickly understand a paper, students entering a new field, and teams preparing paper-sharing or onboarding material.
 
 ## Quick Start
 
-### 1. Install the skill
+### 1. Install for Codex
 
-Copy this entire folder to your Claude Code skills directory:
+Copy this folder into your Codex skills directory:
 
 ```bash
-cp -r paper-to-course ~/.claude/skills/
+mkdir -p ~/.codex/skills
+cp -r paper-to-course ~/.codex/skills/
 ```
 
-### 2. Use it
+If your Codex setup supports skill installation from GitHub, you can also install it from the repository:
 
-Open any project in Claude Code (or a standalone conversation), then say:
-
-```
-Turn this paper into a course
+```bash
+npx skills add KaguraTart/paper-to-course
 ```
 
-Point it at a PDF or LaTeX source, and it will:
+Install the Node dependencies used by the build pipeline:
 
-1. Read and analyze the paper structure
-2. Design a 6-module curriculum
-3. Generate HTML modules with interactive elements
-4. Bundle everything into a single `index.html`
+```bash
+npm install
+```
+
+### 2. Use it in Codex
+
+Open Codex in any workspace and ask:
+
+```text
+Use paper-to-course on papers/your-paper.pdf
+```
+
+or:
+
+```text
+Turn this paper into a course.
+```
+
+Codex will:
+
+1. Read the PDF or LaTeX source and confirm the paper topic.
+2. Design a 6-module curriculum.
+3. Generate HTML modules with interactive elements.
+4. Generate Markdown notes.
+5. Generate a 16-page PPTX deck.
+6. Bundle the HTML course into a single `index.html`.
+
+Put source PDFs or LaTeX projects in `papers/` before running the skill. The folder is kept in Git, but its contents are ignored by default so local papers are not committed accidentally.
 
 ### 3. Open the course
 
 ```bash
-open index.html   # macOS
-xdg-open index.html   # Linux
+open index.html        # macOS
+xdg-open index.html    # Linux
+start index.html       # Windows PowerShell
 ```
 
-No server required — it's a fully self-contained HTML file.
+No server is required. The HTML output is self-contained and works offline.
 
 ## What You Get
 
-Each course includes **7 interactive element types**:
+| Output | File | Description |
+|--------|------|-------------|
+| HTML course | `index.html` | Interactive single-page course with timelines, formulas, quizzes, and diagrams |
+| Markdown notes | `README.md` | Plain-text study document preserving tables, formulas, and code |
+| Slides | `slides.pptx` | 16-page presentation deck for reading groups or seminars |
+
+Each HTML course includes 7 interactive element types:
 
 | Element | What it does |
 |---------|-------------|
-| **Formula Breakdown** | Math formulas translated line-by-line into plain English |
-| **Literature Timeline** | Animated history of the field's key milestones |
-| **Comparison Table** | Hover to see detailed trade-off analysis between methods |
-| **Ablation Diagram** | Visual ablation study showing each component's contribution |
-| **Method Chat** | Animated component conversations explaining how the method works |
-| **Comprehension Quiz** | Multiple-choice questions to test your understanding |
-| **Glossary Tooltips** | Hover any technical term for a plain-English definition |
+| Formula Breakdown | Translates math formulas line by line into plain English |
+| Literature Timeline | Shows the field's key milestones and method evolution |
+| Comparison Table | Compares methods with trade-off analysis |
+| Ablation Diagram | Visualizes how each component contributes to performance |
+| Method Chat | Uses animated component conversations to explain the method |
+| Comprehension Quiz | Tests understanding with multiple-choice questions |
+| Glossary Tooltips | Explains technical terms on hover |
 
-## Course Modules
+## Course Structure
 
-Every paper course follows this 6-module structure:
+Every paper course follows a 6-module structure:
 
-1. **Problem & Motivation** — Why does this matter? What's the bottleneck?
-2. **Literature Timeline** — How did the field evolve? Key breakthroughs?
-3. **SOTA Comparison** — What are the current主流方法? Pros and cons?
-4. **Method Deep-Dive** — Architecture, formulas, algorithm flow
-5. **Experiments & Results** — Benchmarks, ablations, SOTA comparisons
-6. **Limitations & Future Work** — Open problems, next steps
+1. **Problem & Motivation** - why the problem matters and what bottleneck the paper addresses.
+2. **Literature Timeline** - how the field evolved and where this paper fits.
+3. **SOTA Comparison** - current mainstream methods, strengths, and weaknesses.
+4. **Method Deep Dive** - architecture, formulas, and algorithm flow.
+5. **Experiments & Results** - benchmarks, ablations, and empirical findings.
+6. **Limitations & Future Work** - open problems and next research directions.
 
-## File Structure
+## Repository Structure
 
-```
+```text
 paper-to-course/
-├── SKILL.md                  # Claude Code skill instructions
-├── README.md                 # This file
-├── LICENSE                  # MIT License
+├── .codex-plugin/
+│   └── plugin.json          # Codex plugin metadata
+├── papers/                  # Local papers to process, ignored by Git
+├── SKILL.md                 # Codex skill instructions
+├── README.md                # English documentation
+├── README_zh.md             # Chinese documentation
+├── scripts/
+│   ├── build-all.js         # Unified pipeline: HTML + Markdown + PPTX
+│   ├── generate-pptx.js     # Data-driven PPTX generator
+│   ├── slides-builder.js    # PPTX slide builder
+│   └── html-to-md.js        # HTML to Markdown converter
 └── references/
-    ├── styles.css           # Complete design system + paper-specific components
-    ├── main.js              # Interactive engine (animations, quizzes, tooltips)
-    ├── build.sh             # HTML bundler
+    ├── styles.css           # Design system and course components
+    ├── main.js              # Interactive runtime
     ├── _base.html           # HTML template header
     ├── _footer.html         # HTML template footer
-    └── paper-elements.md    # HTML implementation patterns for all 7 element types
+    └── paper-elements.md    # Implementation patterns for interactive elements
 ```
+
+## Build Pipeline
+
+After Codex generates a course directory with `modules/` and `slides-config.json`, run:
+
+```bash
+node scripts/build-all.js ./my-paper-course --output ./output
+```
+
+Common options:
+
+```bash
+node scripts/build-all.js ./my-paper-course --zh --output ./output
+node scripts/build-all.js ./my-paper-course --en
+node scripts/build-all.js ./output --slides-only
+```
+
+PPTX generation is a required part of the workflow. It uses `pptxgenjs`, which is installed by `npm install` from this repo's `package.json`.
 
 ## Design
 
-- **Aesthetic:** Warm "developer notebook" — off-white (#FAF7F2) + coral accent (#D94F30)
-- **Fonts:** Bricolage Grotesque (headings) · DM Sans (body) · JetBrains Mono (formulas/code)
-- **Output:** Single `index.html` — no dependencies, works offline, mobile-friendly
+- **Aesthetic:** warm developer notebook, off-white background `#FAF7F2` with coral accent `#D94F30`.
+- **Fonts:** Bricolage Grotesque for headings, DM Sans for body text, JetBrains Mono for formulas and code.
+- **Output:** self-contained `index.html`, mobile-friendly and offline-ready.
 
 ## Requirements
 
-- [Claude Code](https://claude.ai/code) (any plan)
-- A paper in PDF or LaTeX format
-
-## Extending with Other AI Coding Tools
-
-paper-to-course is a Markdown skill file — it works wherever AI coding tools support custom instructions or skills.
-
-### Claude Code (Recommended)
-
-Copy the skill to your Claude Code skills directory:
-
-```bash
-cp -r paper-to-course ~/.claude/skills/
-```
-
-Then add to your VS Code settings (`~/.config/Code/User/settings.json`):
-
-```json
-{
-  "claudeCode.skills": [
-    {
-      "name": "paper-to-course",
-      "description": "📚 论文 → 交互式课程（HTML + PPT + 笔记）",
-      "path": "/path/to/paper-to-course/SKILL.md"
-    }
-  ]
-}
-```
-
-Reload VS Code (`Ctrl+Shift+P` → "Reload Window"). Then in Claude Code chat:
-
-```
-/paper-to-course /path/to/your-paper.pdf
-```
-
-### VS Code Copilot (Native)
-
-If your VS Code workspace has a `.claude/` directory, place `paper-to-course/` inside it:
-
-```bash
-mkdir -p ./.claude/skills/
-cp -r /path/to/paper-to-course ./.claude/skills/
-```
-
-Add to workspace `.vscode/settings.json`:
-
-```json
-{
-  "claudeCode.skills": [
-    {
-      "name": "paper-to-course",
-      "description": "📚 论文 → 交互式课程",
-      "path": ".claude/skills/paper-to-course/SKILL.md"
-    }
-  ]
-}
-```
-
-### GitHub Copilot Chat
-
-GitHub Copilot Chat supports custom instructions via workspace `CLAUDE.md` or `.github/copilot-instructions.md`. Reference the skill:
-
-1. Copy `paper-to-course/` to your project:
-
-```bash
-cp -r /path/to/paper-to-course ./vendor/
-```
-
-2. Add to `.github/copilot-instructions.md`:
-
-```
-# Paper-to-Course
-When asked to study or understand a paper, use the instructions in ./vendor/paper-to-course/SKILL.md
-to generate an interactive HTML course, Markdown notes, and PPTX slides.
-```
-
-3. In GitHub Copilot Chat, ask:
-
-```
-@paper-to-course /path/to/paper.pdf
-```
-
-Or simply:
-
-```
-Study this paper and generate a course: <attach PDF>
-```
-
-### Codex (OpenAI) / Agentic Tools
-
-Codex and similar agentic tools that support `npx skills add`:
-
-```bash
-# Option A: If you have a public GitHub repo for paper-to-course
-npx skills add your-username/paper-to-course
-
-# Option B: Clone and install locally
-git clone https://github.com/your-username/paper-to-course.git
-cd paper-to-course
-# Follow the tool's local install instructions (usually: point to SKILL.md)
-```
-
-### openclaw
-
-```bash
-# Method A: Copy to openclaw skills directory
-cp -r paper-to-course ~/.openclaw/skills/
-
-# Method B: Via openclaw Web IDE
-# Settings → Skills → Add Skill → point to paper-to-course/SKILL.md
-```
-
-Then in openclaw:
-
-```
-/paper-to-course /path/to/paper.pdf
-```
-
-### Cline / Roo Code / Other VS Code AI Extensions
-
-Most VS Code AI extensions respect the same `claudeCode.skills` setting or read `.md` skill files:
-
-```bash
-# Copy to workspace
-cp -r paper-to-course ./.claude/skills/
-
-# Or reference it in your project CLAUDE.md:
-echo "Use paper-to-course/SKILL.md for paper study tasks" >> CLAUDE.md
-```
-
----
+- Codex with local skill support.
+- Node.js for Markdown and PPTX generation.
+- `pptxgenjs` for required PPTX generation. Install it with `npm install`.
+- Chrome or Chromium for screenshot-based build steps, when enabled.
+- A paper in PDF or LaTeX format.
 
 ## License
 
-MIT License — free to use, modify, and distribute.
+MIT License. Free to use, modify, and distribute.
