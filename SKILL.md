@@ -15,7 +15,7 @@ description: 将学术论文转换为交互式 HTML 课程 + Markdown 文档 + P
 paper-to-course: /path/to/paper.pdf
 ```
 
-**无需额外指令，HTML + Markdown + PPTX 全部自动生成。**
+**除主题确认外无需额外指令；确认通过后，HTML + Markdown + PPTX 全部自动生成。**
 
 ## 自动输出（三种同时生成）
 
