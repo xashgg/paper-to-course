@@ -8,6 +8,8 @@
 
 **paper-to-course** 是一个面向 Codex 的技能包，可以把研究论文转换为：
 
+**项目来源：** 本仓库 fork 并调整自 [KaguraTart/paper-to-course](https://github.com/KaguraTart/paper-to-course)，主要改动面向 Codex 使用方式、插件元数据、依赖安装，以及本地论文/课程生成流程。
+
 - **交互式 HTML 课程**：单页滚动课程，支持公式拆解、发展时间线、方法对比、消融图、组件对话动画和测验。
 - **Markdown 学习笔记**：保留表格、公式、代码块，适合继续编辑和分享。
 - **PPTX 演示文稿**：基于 JSON 配置生成 16 页组会/课堂汇报幻灯片。

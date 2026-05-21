@@ -4,6 +4,8 @@
 
 **paper-to-course** is a Codex-ready skill for turning research papers into teaching and study materials. It produces a self-contained scroll-based course with formula breakdowns, literature timelines, method comparisons, ablation diagrams, component chats, quizzes, plus matching Markdown notes and a seminar-style slide deck.
 
+**Origin:** this repository is forked and adjusted from [KaguraTart/paper-to-course](https://github.com/KaguraTart/paper-to-course), with changes focused on Codex-oriented usage, plugin metadata, dependency setup, and local paper/course workflow.
+
 **Target users:** researchers who need to quickly understand a paper, students entering a new field, and teams preparing paper-sharing or onboarding material.
 
 ## Quick Start
