@@ -9,7 +9,7 @@ description: 将学术论文转换为交互式 HTML 课程 + Markdown 文档 + P
 
 ## 使用方法
 
-用户调用 skill 时传入 PDF 路径，skill 自动完成以下全部工作：
+用户调用 skill 时传入 PDF 路径，skill 先执行论文主题确认；收到用户明确确认后，自动完成以下全部工作：
 
 ```
 paper-to-course: /path/to/paper.pdf
