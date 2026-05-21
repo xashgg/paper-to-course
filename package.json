@@ -1,0 +1,22 @@
+{
+  "name": "paper-to-course",
+  "version": "1.0.0",
+  "description": "Convert academic papers into interactive HTML courses, Markdown notes, and PPTX slides.",
+  "private": true,
+  "license": "MIT",
+  "author": "KaguraTart",
+  "type": "commonjs",
+  "scripts": {
+    "build": "node scripts/build-all.js",
+    "build:html": "node scripts/build-all.js --html",
+    "build:md": "node scripts/build-all.js --md",
+    "build:pptx": "node scripts/build-all.js --pptx",
+    "generate:pptx": "node scripts/generate-pptx.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "pptxgenjs": "^4.0.1"
+  }
+}
