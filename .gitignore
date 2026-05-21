@@ -7,3 +7,10 @@ Thumbs.db
 *.swo
 .vscode/
 .idea/
+
+# Node
+node_modules/
+
+# Input papers
+papers/*
+!papers/.gitkeep
