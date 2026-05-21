@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Impact of Generative AI on Information Processing</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400;1,9..40,500&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    :root {
+      --color-accent: #D94F30;
+      --color-accent-hover: #C4432A;
+      --color-accent-light: #FDEEE9;
+      --color-accent-muted: #E8836C;
+    }
+  </style>
+  <script src="main.js" defer></script>
+</head>
+<body>
+  <nav class="nav" id="nav">
+    <div class="progress-bar" id="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+    <div class="nav-inner">
+      <span class="nav-title">Generative AI and Information Processing</span>
+      <div class="nav-dots" id="nav-dots" role="tablist">
+        <button class="nav-dot" data-target="module-1" data-tooltip="Motivation" role="tab" aria-label="Module 1: Motivation"></button>
+        <button class="nav-dot" data-target="module-2" data-tooltip="Research Design" role="tab" aria-label="Module 2: Research Design"></button>
+        <button class="nav-dot" data-target="module-3" data-tooltip="Analyst Outcomes" role="tab" aria-label="Module 3: Analyst Outcomes"></button>
+        <button class="nav-dot" data-target="module-4" data-tooltip="Method Deep Dive" role="tab" aria-label="Module 4: Method Deep Dive"></button>
+        <button class="nav-dot" data-target="module-5" data-tooltip="Market Effects" role="tab" aria-label="Module 5: Market Effects"></button>
+        <button class="nav-dot" data-target="module-6" data-tooltip="Limits and Quiz" role="tab" aria-label="Module 6: Limits and Quiz"></button>
+      </div>
+    </div>
+  </nav>
+  <main id="main">
+
+<section class="module" id="module-1">
+  <div class="module-content">
+    <header class="module-header animate-in">
+      <span class="module-number">01</span>
+      <h1 class="module-title">Why This Paper Matters</h1>
+      <p class="module-subtitle">The paper asks whether generative AI changes real capital-market information processing, not just writing style or worker convenience.</p>
+    </header>
+
+    <div class="screen animate-in">
+      <h2 class="screen-heading">The Big Question</h2>
+      <p>Bertomeu, Lin, Liu, and Ni study whether access to ChatGPT improved the ability of financial analysts and investors to process information. Their setting is unusually sharp: Italy temporarily banned ChatGPT from March 31 to April 28, 2023, creating a short, geographically bounded shock.</p>
+      <div class="callout callout-accent">
+        <div class="callout-content">
+          <span class="callout-title">Core intuition</span>
+          <p>If generative AI lowers the cost of reading, summarizing, translating, and organizing information, then removing it should reduce analyst output and make markets less informationally efficient.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="screen animate-in">
+      <h2 class="screen-heading">What Makes the Setting Powerful</h2>
+      <div class="pattern-cards">
+        <div class="pattern-card">
+          <h3>Unexpected timing</h3>
+          <p>The ban arrived abruptly after ChatGPT was already widely known, but before close substitutes were broadly available in Europe.</p>
+        </div>
+        <div class="pattern-card">
+          <h3>Geographic scope</h3>
+          <p>Italian IP addresses were blocked, while foreign analysts covering the same Italian firms remained able to use ChatGPT.</p>
+        </div>
+        <div class="pattern-card">
+          <h3>Measurable outputs</h3>
+          <p>Analysts issue reports and forecasts, letting the authors observe text characteristics, forecast frequency, and forecast accuracy.</p>
+        </div>
+        <div class="pattern-card">
+          <h3>Market consequences</h3>
+          <p>The paper goes beyond analysts and tests earnings announcement reactions and bid-ask spreads.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="screen animate-in">
+      <h2 class="screen-heading">The Causal Chain</h2>
+      <div class="flow-animation">
+        <div class="flow-actors">
+          <div class="flow-actor active"><div class="flow-actor-icon">1</div><span>ChatGPT access</span></div>
+          <div class="flow-actor active"><div class="flow-actor-icon">2</div><span>Analyst processing cost</span></div>
+          <div class="flow-actor active"><div class="flow-actor-icon">3</div><span>Forecast production</span></div>
+          <div class="flow-actor active"><div class="flow-actor-icon">4</div><span>Price discovery</span></div>
+        </div>
+        <p class="flow-step-label">The Italy ban temporarily raises processing costs for domestic analysts. If analysts matter, fewer or worse forecasts should reduce pre-announcement information flow and increase information asymmetry.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="module" id="module-2">
+  <div class="module-content">
+    <header class="module-header animate-in">
+      <span class="module-number">02</span>
+      <h1 class="module-title">Research Design</h1>
+      <p class="module-subtitle">The paper turns a policy shock into a difference-in-differences test of information-processing capacity.</p>
+    </header>
+
+    <div class="screen animate-in">
+      <h2 class="screen-heading">Timeline of the Empirical Setting</h2>
+      <div class="timeline-container">
+        <div class="timeline-line"></div>
+        <div class="timeline-item" data-year="2022">
+          <div class="timeline-dot"></div>
+          <div class="timeline-card">
+            <span class="timeline-year">Nov 2022</span>
+            <h4>ChatGPT released</h4>
+            <p class="timeline-desc">The tool becomes available and quickly diffuses into white-collar workflows.</p>
+            <div class="timeline-method-tag">Technology shock</div>
+          </div>
+        </div>
+        <div class="timeline-item" data-year="2023">
+          <div class="timeline-dot"></div>
+          <div class="timeline-card">
+            <span class="timeline-year">Jan-Mar 2023</span>
+            <h4>Pre-ban baseline</h4>
+            <p class="timeline-desc">Analyst reports and forecasts establish domestic versus foreign analyst behavior before treatment.</p>
+            <div class="timeline-method-tag">Control window</div>
+          </div>
+        </div>
+        <div class="timeline-item" data-year="2023">
+          <div class="timeline-dot"></div>
+          <div class="timeline-card">
+            <span class="timeline-year">Mar 31-Apr 28</span>
+            <h4>Italy blocks ChatGPT</h4>
+            <p class="timeline-desc">The authors treat Italy-based analysts as exposed and foreign analysts covering the same firms as controls.</p>
+            <div class="timeline-method-tag">Treatment</div>
+          </div>
+        </div>
+        <div class="timeline-item" data-year="2023">
+          <div class="timeline-dot"></div>
+          <div class="timeline-card">
+            <span class="timeline-year">May-Jun 2023</span>
+            <h4>Restoration period</h4>
+            <p class="timeline-desc">Dynamic tests examine whether outcomes reverse after ChatGPT access returns.</p>
+            <div class="timeline-method-tag">Reversal check</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="screen animate-in">
+      <h2 class="screen-heading">Samples and Measurements</h2>
+      <div class="comparison-table-container">
+        <table class="comparison-table">
+          <thead>
+            <tr><th>Dataset</th><th>Unit</th><th>Main use</th><th>Key scale</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><span class="method-name">Analyst reports</span></td><td>Analyst-month</td><td>AI-use text detection and industry-information share</td><td>1,208 observations; 2,090 reports; 677 analysts</td></tr>
+            <tr><td><span class="method-name">Forecasts</span></td><td>Analyst-firm-month</td><td>Forecast frequency and accuracy</td><td>2,084 observations; 155 analysts; 107 firms</td></tr>
+            <tr><td><span class="method-name">Market data</span></td><td>Firm-month or event</td><td>Earnings reactions and bid-ask spreads</td><td>228 Italian firms matched to 228 European firms</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="screen animate-in">
+      <h2 class="screen-heading">Treatment and Control Logic</h2>
+      <div class="translation-block">
+        <div class="translation-code">
+          <span class="translation-label">DESIGN</span>
+          <span class="code-line">Treated = Italy-based analysts</span>
+          <span class="code-line">Controls = foreign analysts covering same firms</span>
+          <span class="code-line">Shock = ChatGPT unavailable in Italy</span>
+          <span class="code-line">Fixed effects = firm-month and analyst-firm</span>
+        </div>
+        <div class="translation-english">
+          <span class="translation-label">WHAT THIS BUYS</span>
+          <div class="translation-lines">
+            <div class="tl">Same firm comparisons reduce concern that fundamentals changed only for Italian companies.</div>
+            <div class="tl">Analyst-firm fixed effects compare an analyst's behavior on the same coverage relationship over time.</div>
+            <div class="tl">The design isolates a temporary change in processing technology rather than a broad economic shock.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="module" id="module-3">
+  <div class="module-content">
+    <header class="module-header animate-in">
+      <span class="module-number">03</span>
+      <h1 class="module-title">What Happened to Analysts?</h1>
+      <p class="module-subtitle">The ban changed report language, reduced forecast production, lowered accuracy, and shifted attention toward broader industry information.</p>
+    </header>
+
+    <div class="screen animate-in">
+      <h2 class="screen-heading">Evidence That ChatGPT Use Fell</h2>
+      <p>The authors use two AI-generated-text-detection measures from computer science: <span class="term" data-definition="Perplexity captures how predictable a text is under a language model. Higher perplexity here indicates more human-like writing.">perplexity</span> and <span class="term" data-definition="Burstiness measures variation in sentence patterns. Higher burstiness here indicates more human-like writing.">burstiness</span>. During the ban, domestic analysts' reports looked more human-written relative to foreign analysts' reports.</p>
+      <div class="ablation-container">
+        <h3>Table 2: Increase in human-writing signal for domestic analysts</h3>
+        <p class="ablation-intro">Effects are expressed as percentages of the sample standard deviation.</p>
+        <div class="ablation-chart">
+          <div class="ablation-bar-group"><span class="ablation-label">Perplexity</span><div class="ablation-bar-track"><div class="ablation-bar fill-full bar-w-40"><span class="ablation-value">39.5%</span></div></div></div>
+          <div class="ablation-bar-group"><span class="ablation-label">Burstiness</span><div class="ablation-bar-track"><div class="ablation-bar fill-full bar-w-62"><span class="ablation-value">61.6%</span></div></div></div>
+          <div class="ablation-bar-group"><span class="ablation-label">Composite</span><div class="ablation-bar-track"><div class="ablation-bar fill-full bar-w-70"><span class="ablation-value">69.5%</span></div></div></div>
+        </div>
+        <div class="ablation-insight">The effect is stronger among analysts with technical backgrounds, consistent with heavier pre-ban adoption.</div>
+      </div>
+    </div>
+
+    <div class="screen animate-in">
+      <h2 class="screen-heading">Forecast Production Falls</h2>
+      <div class="comparison-table-container">
+        <table class="comparison-table">
+          <thead>
+            <tr><th>Outcome</th><th>Main estimate</th><th>Interpretation</th><th>Where strongest?</th></tr>
+          </thead>
+          <tbody>
+            <tr class="highlight-row"><td><span class="method-name highlight">Forecast frequency</span></td><td>-0.111 to -0.125</td><td>About 21% of the sample standard deviation fewer forecasts</td><td>Technical analysts and analysts with higher ex-ante AI-use probability</td></tr>
+            <tr><td><span class="method-name">Foreign substitution</span></td><td>No significant increase</td><td>Foreign analysts do not fully fill the information gap</td><td>No strong foreign-analyst offset</td></tr>
+            <tr><td><span class="method-name">Forecast accuracy</span></td><td>+0.946 absolute forecast error (*100)</td><td>Domestic forecasts become less accurate during the ban</td><td>Again stronger for likely AI users</td></tr>
+            <tr><td><span class="method-name">Industry information</span></td><td>+0.197</td><td>Reports rely more on broad industry or macro information</td><td>Effect stronger for likely AI users and technical analysts</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="screen animate-in">
+      <h2 class="screen-heading">How to Read the Analyst Results</h2>
+      <div class="chat-window">
+        <div class="chat-messages">
+          <div class="chat-message"><div class="chat-avatar avatar-analyst">A</div><div class="chat-bubble"><span class="chat-sender">Analyst</span><p>Before the ban, I can use ChatGPT to summarize filings, polish English, and organize sector information.</p></div></div>
+          <div class="chat-message"><div class="chat-avatar avatar-ban">B</div><div class="chat-bubble"><span class="chat-sender">Ban</span><p>For Italy-based analysts, that workflow is interrupted for almost a month.</p></div></div>
+          <div class="chat-message"><div class="chat-avatar avatar-data">D</div><div class="chat-bubble"><span class="chat-sender">Data</span><p>Reports look less AI-assisted, forecasts are fewer, and accuracy deteriorates relative to foreign analysts covering the same firms.</p></div></div>
+          <div class="chat-message"><div class="chat-avatar avatar-mechanism">M</div><div class="chat-bubble"><span class="chat-sender">Mechanism</span><p>The pattern fits a processing-cost story: when capacity falls, analysts allocate attention toward easier-to-process industry-level information.</p></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="module" id="module-4">
+  <div class="module-content">
+    <header class="module-header animate-in">
+      <span class="module-number">04</span>
+      <h1 class="module-title">Method Deep Dive</h1>
+      <p class="module-subtitle">The paper uses a family of related regressions, all asking whether Italian exposure during the ban changes outcomes relative to suitable controls.</p>
+    </header>
+
+    <div class="screen animate-in">
+      <h2 class="screen-heading">The Core Difference-in-Differences Formula</h2>
+      <div class="formula-block">
+        <div class="formula-original">
+          <span class="formula-label">MODEL</span>
+          <div class="formula-math">Y = beta1 * ItalyAnalyst x Ban + controls + fixed effects + error</div>
+        </div>
+        <div class="formula-explanation">
+          <span class="formula-label">WHAT IT MEANS</span>
+          <div class="formula-line"><span class="formula-symbol">Y</span><span class="formula-english">The outcome: text characteristics, number of forecasts, forecast accuracy, or industry-information share.</span></div>
+          <div class="formula-line"><span class="formula-symbol">ItalyAnalyst</span><span class="formula-english">An indicator for analysts located in Italy, based on office address, email domain, or phone number.</span></div>
+          <div class="formula-line"><span class="formula-symbol">Ban</span><span class="formula-english">An indicator for the temporary ChatGPT ban period.</span></div>
+          <div class="formula-line"><span class="formula-symbol">beta1</span><span class="formula-english">The treatment effect: how much Italian analysts changed during the ban relative to comparable foreign analysts.</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="screen animate-in">
+      <h2 class="screen-heading">Three Designs, One Logic</h2>
+      <div class="step-cards">
+        <div class="step-card"><span>1</span><h3>Text evidence</h3><p>Analyst reports are scored using perplexity and burstiness. Higher values indicate a lower probability of AI-generated or AI-polished prose.</p></div>
+        <div class="step-card"><span>2</span><h3>Analyst production</h3><p>Forecast frequency compares domestic and foreign analysts covering the same firm, with firm-month and analyst-firm fixed effects.</p></div>
+        <div class="step-card"><span>3</span><h3>Market efficiency</h3><p>Firm-level tests compare Italian firms with matched European firms to see whether less analyst information changes trading outcomes.</p></div>
+      </div>
+    </div>
+
+    <div class="screen animate-in">
+      <h2 class="screen-heading">Cross-Sectional Tests Are Mechanism Tests</h2>
+      <p>The strongest effects appear among analysts more likely to have relied on ChatGPT before the ban. The paper uses two proxies: reports that looked more AI-generated before the ban, and technical education backgrounds.</p>
+      <div class="comparison-table-container">
+        <table class="comparison-table">
+          <thead><tr><th>Proxy</th><th>Why it matters</th><th>What the paper finds</th></tr></thead>
+          <tbody>
+            <tr><td><span class="method-name">Ex-ante AI text probability</span></td><td>Low composite scores before the ban suggest more AI-polished text.</td><td>Forecast decline and accuracy decline are concentrated in this group.</td></tr>
+            <tr><td><span class="method-name">Tech major</span></td><td>Technical-background analysts are plausibly earlier adopters of new tools.</td><td>The ban effect is stronger for text metrics, forecast frequency, accuracy, and industry-information reliance.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="module" id="module-5">
+  <div class="module-content">
+    <header class="module-header animate-in">
+      <span class="module-number">05</span>
+      <h1 class="module-title">Market-Level Consequences</h1>
+      <p class="module-subtitle">The analyst shock appears to spill into price discovery, earnings-announcement reactions, and liquidity.</p>
+    </header>
+
+    <div class="screen animate-in">
+      <h2 class="screen-heading">Earnings Announcements Carry More News</h2>
+      <p>If analyst forecasts incorporate less forward-looking information before earnings announcements, then earnings releases should surprise the market more. The paper finds stronger market reactions for Italian firms during the ban relative to matched European firms.</p>
+      <div class="ablation-container">
+        <h3>Additional market-adjusted return for a one-standard-deviation earnings surprise</h3>
+        <div class="ablation-chart">
+          <div class="ablation-bar-group"><span class="ablation-label">Day 0</span><div class="ablation-bar-track"><div class="ablation-bar fill-full bar-w-75"><span class="ablation-value">3.73 pp</span></div></div></div>
+          <div class="ablation-bar-group"><span class="ablation-label">[-1,+1]</span><div class="ablation-bar-track"><div class="ablation-bar fill-remove bar-w-50"><span class="ablation-value">2.51 pp</span></div></div></div>
+          <div class="ablation-bar-group"><span class="ablation-label">[-2,+2]</span><div class="ablation-bar-track"><div class="ablation-bar fill-remove bar-w-55"><span class="ablation-value">2.75 pp</span></div></div></div>
+          <div class="ablation-bar-group"><span class="ablation-label">[-3,+3]</span><div class="ablation-bar-track"><div class="ablation-bar fill-full bar-w-74"><span class="ablation-value">3.72 pp</span></div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="screen animate-in">
+      <h2 class="screen-heading">Bid-Ask Spreads Widen</h2>
+      <div class="comparison-table-container">
+        <table class="comparison-table">
+          <thead><tr><th>Liquidity outcome</th><th>Italy x Ban coefficient</th><th>Interpretation</th></tr></thead>
+          <tbody>
+            <tr class="highlight-row"><td><span class="method-name highlight">Raw bid-ask spread</span></td><td>0.028***</td><td>Trading becomes less liquid for Italian firms during the ban.</td></tr>
+            <tr><td><span class="method-name">Adjusted bid-ask spread</span></td><td>0.031***</td><td>The result persists after adjusting by trading volume.</td></tr>
+            <tr><td><span class="method-name">Economic size</span></td><td>About 1.5 sample standard deviations</td><td>The effect is large, not only statistically detectable.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="screen animate-in">
+      <h2 class="screen-heading">Who Is Most Exposed?</h2>
+      <div class="pattern-cards">
+        <div class="pattern-card"><h3>Low analyst coverage</h3><p>Firms with fewer analysts experience larger spread increases, consistent with analyst information being harder to replace.</p></div>
+        <div class="pattern-card"><h3>Low foreign ownership</h3><p>Firms with fewer foreign investors are more exposed because foreign investors are outside the Italian access restriction.</p></div>
+        <div class="pattern-card"><h3>Low institutional ownership</h3><p>Firms with fewer sophisticated investors show larger effects, consistent with smaller investors benefiting from AI-assisted processing.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="module" id="module-6">
+  <div class="module-content">
+    <header class="module-header animate-in">
+      <span class="module-number">06</span>
+      <h1 class="module-title">Limitations, Takeaways, and Quiz</h1>
+      <p class="module-subtitle">The paper is strong because the shock is sharp, but its interpretation still depends on adoption, workarounds, and measurement assumptions.</p>
+    </header>
+
+    <div class="screen animate-in">
+      <h2 class="screen-heading">Main Takeaways</h2>
+      <div class="pattern-cards">
+        <div class="pattern-card"><h3>AI as infrastructure</h3><p>Generative AI appears to function as a productivity tool for analyst information processing, not merely as a writing assistant.</p></div>
+        <div class="pattern-card"><h3>Information production</h3><p>When access is removed, domestic analysts issue fewer forecasts and provide less accurate forecasts.</p></div>
+        <div class="pattern-card"><h3>Attention allocation</h3><p>Analysts shift toward broader industry and macro information when firm-specific processing becomes more costly.</p></div>
+        <div class="pattern-card"><h3>Market efficiency</h3><p>Reduced analyst processing is associated with stronger earnings reactions and wider bid-ask spreads.</p></div>
+      </div>
+    </div>
+
+    <div class="screen animate-in">
+      <h2 class="screen-heading">Caveats</h2>
+      <div class="comparison-table-container">
+        <table class="comparison-table">
+          <thead><tr><th>Concern</th><th>Why it matters</th><th>How the paper responds</th></tr></thead>
+          <tbody>
+            <tr><td><span class="method-name">VPN workarounds</span></td><td>Some Italian users could still access ChatGPT, attenuating treatment.</td><td>The authors interpret estimates as effects of reduced access, not perfect removal.</td></tr>
+            <tr><td><span class="method-name">Alternative tools</span></td><td>Users might switch to other AI services.</td><td>The ban occurred early, before close substitutes were widely available in Europe.</td></tr>
+            <tr><td><span class="method-name">Text detection noise</span></td><td>Perplexity and burstiness are imperfect measures of AI use.</td><td>Text evidence is combined with forecast behavior and market outcomes.</td></tr>
+            <tr><td><span class="method-name">Short event window</span></td><td>The ban lasted less than one month.</td><td>Dynamic tests show effects appearing during the ban and reversing after restoration.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="screen animate-in">
+      <h2 class="screen-heading">Comprehension Check</h2>
+      <div class="quiz-container" id="final-quiz">
+        <div class="quiz-question-block" data-correct="b" data-explanation-right="The design compares Italy-based analysts with foreign analysts covering the same firms during a temporary access shock." data-explanation-wrong="The core identification comes from the Italy-specific temporary ban, not from comparing all AI users with non-users.">
+          <div class="quiz-question">What is the paper's central identification strategy?</div>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="a" onclick="selectOption(this)"><span class="quiz-option-radio"></span> Compare analysts before and after ChatGPT launched globally.</button>
+            <button class="quiz-option" data-value="b" onclick="selectOption(this)"><span class="quiz-option-radio"></span> Compare Italy-based analysts to foreign analysts during Italy's temporary ChatGPT ban.</button>
+            <button class="quiz-option" data-value="c" onclick="selectOption(this)"><span class="quiz-option-radio"></span> Randomly assign analysts to use or avoid ChatGPT.</button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+        <div class="quiz-question-block" data-correct="c" data-explanation-right="The larger effects for likely adopters support the mechanism that ChatGPT access mattered for analysts' processing capacity." data-explanation-wrong="The cross-sectional tests are not decorative; they help identify whether the effect is concentrated where ChatGPT use was most likely.">
+          <div class="quiz-question">Why do technical majors and ex-ante AI-text probability matter?</div>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="a" onclick="selectOption(this)"><span class="quiz-option-radio"></span> They prove that every analyst used ChatGPT.</button>
+            <button class="quiz-option" data-value="b" onclick="selectOption(this)"><span class="quiz-option-radio"></span> They remove the need for fixed effects.</button>
+            <button class="quiz-option" data-value="c" onclick="selectOption(this)"><span class="quiz-option-radio"></span> They proxy for analysts more likely to have relied on ChatGPT before the ban.</button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+        <button class="quiz-check-btn" onclick="checkQuiz('final-quiz')">Check answers</button>
+        <button class="quiz-reset-btn" onclick="resetQuiz('final-quiz')">Reset</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+  </main>
+</body>
+</html>

@@ -1,0 +1,89 @@
+<section class="module" id="module-2">
+  <div class="module-content">
+    <header class="module-header animate-in">
+      <span class="module-number">02</span>
+      <h1 class="module-title">Research Design</h1>
+      <p class="module-subtitle">The paper turns a policy shock into a difference-in-differences test of information-processing capacity.</p>
+    </header>
+
+    <div class="screen animate-in">
+      <h2 class="screen-heading">Timeline of the Empirical Setting</h2>
+      <div class="timeline-container">
+        <div class="timeline-line"></div>
+        <div class="timeline-item" data-year="2022">
+          <div class="timeline-dot"></div>
+          <div class="timeline-card">
+            <span class="timeline-year">Nov 2022</span>
+            <h4>ChatGPT released</h4>
+            <p class="timeline-desc">The tool becomes available and quickly diffuses into white-collar workflows.</p>
+            <div class="timeline-method-tag">Technology shock</div>
+          </div>
+        </div>
+        <div class="timeline-item" data-year="2023">
+          <div class="timeline-dot"></div>
+          <div class="timeline-card">
+            <span class="timeline-year">Jan-Mar 2023</span>
+            <h4>Pre-ban baseline</h4>
+            <p class="timeline-desc">Analyst reports and forecasts establish domestic versus foreign analyst behavior before treatment.</p>
+            <div class="timeline-method-tag">Control window</div>
+          </div>
+        </div>
+        <div class="timeline-item" data-year="2023">
+          <div class="timeline-dot"></div>
+          <div class="timeline-card">
+            <span class="timeline-year">Mar 31-Apr 28</span>
+            <h4>Italy blocks ChatGPT</h4>
+            <p class="timeline-desc">The authors treat Italy-based analysts as exposed and foreign analysts covering the same firms as controls.</p>
+            <div class="timeline-method-tag">Treatment</div>
+          </div>
+        </div>
+        <div class="timeline-item" data-year="2023">
+          <div class="timeline-dot"></div>
+          <div class="timeline-card">
+            <span class="timeline-year">May-Jun 2023</span>
+            <h4>Restoration period</h4>
+            <p class="timeline-desc">Dynamic tests examine whether outcomes reverse after ChatGPT access returns.</p>
+            <div class="timeline-method-tag">Reversal check</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="screen animate-in">
+      <h2 class="screen-heading">Samples and Measurements</h2>
+      <div class="comparison-table-container">
+        <table class="comparison-table">
+          <thead>
+            <tr><th>Dataset</th><th>Unit</th><th>Main use</th><th>Key scale</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><span class="method-name">Analyst reports</span></td><td>Analyst-month</td><td>AI-use text detection and industry-information share</td><td>1,208 observations; 2,090 reports; 677 analysts</td></tr>
+            <tr><td><span class="method-name">Forecasts</span></td><td>Analyst-firm-month</td><td>Forecast frequency and accuracy</td><td>2,084 observations; 155 analysts; 107 firms</td></tr>
+            <tr><td><span class="method-name">Market data</span></td><td>Firm-month or event</td><td>Earnings reactions and bid-ask spreads</td><td>228 Italian firms matched to 228 European firms</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="screen animate-in">
+      <h2 class="screen-heading">Treatment and Control Logic</h2>
+      <div class="translation-block">
+        <div class="translation-code">
+          <span class="translation-label">DESIGN</span>
+          <span class="code-line">Treated = Italy-based analysts</span>
+          <span class="code-line">Controls = foreign analysts covering same firms</span>
+          <span class="code-line">Shock = ChatGPT unavailable in Italy</span>
+          <span class="code-line">Fixed effects = firm-month and analyst-firm</span>
+        </div>
+        <div class="translation-english">
+          <span class="translation-label">WHAT THIS BUYS</span>
+          <div class="translation-lines">
+            <div class="tl">Same firm comparisons reduce concern that fundamentals changed only for Italian companies.</div>
+            <div class="tl">Analyst-firm fixed effects compare an analyst's behavior on the same coverage relationship over time.</div>
+            <div class="tl">The design isolates a temporary change in processing technology rather than a broad economic shock.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

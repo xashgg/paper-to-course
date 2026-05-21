@@ -1,0 +1,128 @@
+{
+  "title": "The Impact of Generative AI on Information Processing",
+  "subtitle": "Evidence from the ban of ChatGPT in Italy - Bertomeu, Lin, Liu, and Ni (2025)",
+  "slides": [
+    {
+      "type": "title",
+      "title": "The Impact of Generative AI on Information Processing",
+      "subtitle": "Evidence from the ban of ChatGPT in Italy",
+      "note": "Journal of Accounting and Economics 80 (2025), 101782"
+    },
+    {
+      "type": "outline",
+      "title": "Discussion Roadmap",
+      "items": ["Research question", "Italy ban as shock", "Analyst-level evidence", "Market-level evidence", "Interpretation and caveats"]
+    },
+    {
+      "type": "content",
+      "title": "Why the Paper Matters",
+      "layout": "cards-3",
+      "cards": [
+        { "title": "Generative AI as processing capital", "text": "ChatGPT may reduce the cost of reading, summarizing, translating, and organizing information.", "color": "#D94F30" },
+        { "title": "Analysts are measurable intermediaries", "text": "Reports, forecast frequency, and forecast accuracy reveal how information production changes.", "color": "#2A7B9B" },
+        { "title": "Markets reveal spillovers", "text": "Earnings reactions and bid-ask spreads test whether reduced processing affects price discovery.", "color": "#2D8B55" }
+      ]
+    },
+    {
+      "type": "timeline",
+      "title": "Institutional Timeline",
+      "items": [
+        { "year": "Nov 2022", "title": "ChatGPT released", "desc": "The tool diffuses rapidly into information work." },
+        { "year": "Jan-Mar 2023", "title": "Pre-ban baseline", "desc": "Analyst reports and forecasts establish comparison behavior." },
+        { "year": "Mar 31-Apr 28", "title": "Italy ban", "desc": "Italian IP addresses are blocked from ChatGPT." },
+        { "year": "May-Jun 2023", "title": "Restoration", "desc": "Dynamic tests examine reversal after access returns." }
+      ]
+    },
+    {
+      "type": "table",
+      "title": "Empirical Design",
+      "headers": ["Component", "Implementation", "Purpose"],
+      "rows": [
+        ["Treatment", "Italy-based analysts during ban", "Access shock"],
+        ["Control", "Foreign analysts covering same firms", "Hold firm fundamentals closer"],
+        ["Key fixed effects", "Firm-month and analyst-firm", "Absorb fundamentals and stable coverage traits"],
+        ["Mechanism proxies", "Tech major; ex-ante AI text probability", "Identify likely ChatGPT users"]
+      ],
+      "highlightRows": [0]
+    },
+    {
+      "type": "stats",
+      "title": "Core Data Scale",
+      "stats": [
+        { "value": "2,090", "label": "analyst reports", "color": "#D94F30", "big": true },
+        { "value": "1,208", "label": "analyst-month observations", "color": "#2A7B9B" },
+        { "value": "2,084", "label": "analyst-firm-month forecasts", "color": "#2D8B55" },
+        { "value": "456", "label": "matched firm sample", "color": "#D4A843" }
+      ]
+    },
+    {
+      "type": "bars",
+      "title": "AI-Use Footprint Falls During the Ban",
+      "items": [
+        { "label": "Perplexity", "value": 39.5, "drop": 39.5 },
+        { "label": "Burstiness", "value": 61.6, "drop": 61.6 },
+        { "label": "Composite score", "value": 69.5, "drop": 69.5 }
+      ]
+    },
+    {
+      "type": "table",
+      "title": "Analyst Output Effects",
+      "headers": ["Outcome", "Estimate", "Interpretation"],
+      "rows": [
+        ["Forecast frequency", "-0.111 to -0.125", "About 21% of sample SD fewer forecasts"],
+        ["Foreign substitution", "Not significant", "Foreign analysts do not take up the slack"],
+        ["Forecast accuracy", "+0.946 AFE (*100)", "Forecast errors increase"],
+        ["Industry information", "+0.197", "More reliance on industry or macro content"]
+      ],
+      "highlightRows": [0, 2]
+    },
+    {
+      "type": "formula",
+      "title": "Difference-in-Differences Logic",
+      "formula": "Y = beta1 * Italy Analyst x Ban + controls + fixed effects + error",
+      "lines": [
+        { "symbol": "Y", "english": "Outcome such as text score, forecast count, accuracy, or bid-ask spread." },
+        { "symbol": "Italy Analyst", "english": "One for analysts located in Italy." },
+        { "symbol": "Ban", "english": "One during the ChatGPT ban period." },
+        { "symbol": "beta1", "english": "Treatment effect of reduced ChatGPT access." }
+      ]
+    },
+    {
+      "type": "flow",
+      "title": "Proposed Mechanism",
+      "steps": [
+        { "num": "1", "title": "Access removed", "subtitle": "Italy ban", "desc": "Domestic analysts lose easy ChatGPT access." },
+        { "num": "2", "title": "Processing costs rise", "subtitle": "Capacity constraint", "desc": "Summarization and organization become harder." },
+        { "num": "3", "title": "Forecasts decline", "subtitle": "Less intermediation", "desc": "Frequency and accuracy fall." },
+        { "num": "4", "title": "Markets react", "subtitle": "Less pre-event information", "desc": "Earnings reactions and spreads increase." }
+      ]
+    },
+    {
+      "type": "table",
+      "title": "Market-Level Findings",
+      "headers": ["Outcome", "Finding", "Meaning"],
+      "rows": [
+        ["Earnings reaction", "Italy x Ban x UE = 0.829*** for day 0", "Earnings announcements contain more news"],
+        ["Raw bid-ask spread", "Italy x Ban = 0.028***", "Liquidity worsens"],
+        ["Adjusted bid-ask spread", "Italy x Ban = 0.031***", "Effect persists after volume adjustment"],
+        ["Cross sections", "Smaller effects with high analyst, foreign, or institutional ownership", "Alternative information channels cushion the shock"]
+      ],
+      "highlightRows": [1, 2]
+    },
+    {
+      "type": "limitations",
+      "title": "Caveats and Boundary Conditions",
+      "limitations": ["VPN workarounds mean treatment is incomplete", "Text-detection measures are noisy", "The ban lasted less than one month", "Alternative AI tools could attenuate effects"],
+      "futureWork": ["Study longer AI access shocks", "Measure task-level AI use directly", "Compare across analyst industries", "Test retail investor information processing more directly"]
+    },
+    {
+      "type": "summary",
+      "title": "Bottom Line",
+      "items": [
+        { "text": "Generative AI appears to matter for professional information processing.", "color": "#D94F30" },
+        { "text": "The analyst evidence links AI access to information quantity and quality.", "color": "#2A7B9B" },
+        { "text": "The market evidence suggests reduced processing can weaken informational efficiency.", "color": "#2D8B55" }
+      ]
+    }
+  ]
+}

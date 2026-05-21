@@ -1,0 +1,53 @@
+<section class="module" id="module-3">
+  <div class="module-content">
+    <header class="module-header animate-in">
+      <span class="module-number">03</span>
+      <h1 class="module-title">What Happened to Analysts?</h1>
+      <p class="module-subtitle">The ban changed report language, reduced forecast production, lowered accuracy, and shifted attention toward broader industry information.</p>
+    </header>
+
+    <div class="screen animate-in">
+      <h2 class="screen-heading">Evidence That ChatGPT Use Fell</h2>
+      <p>The authors use two AI-generated-text-detection measures from computer science: <span class="term" data-definition="Perplexity captures how predictable a text is under a language model. Higher perplexity here indicates more human-like writing.">perplexity</span> and <span class="term" data-definition="Burstiness measures variation in sentence patterns. Higher burstiness here indicates more human-like writing.">burstiness</span>. During the ban, domestic analysts' reports looked more human-written relative to foreign analysts' reports.</p>
+      <div class="ablation-container">
+        <h3>Table 2: Increase in human-writing signal for domestic analysts</h3>
+        <p class="ablation-intro">Effects are expressed as percentages of the sample standard deviation.</p>
+        <div class="ablation-chart">
+          <div class="ablation-bar-group"><span class="ablation-label">Perplexity</span><div class="ablation-bar-track"><div class="ablation-bar fill-full bar-w-40"><span class="ablation-value">39.5%</span></div></div></div>
+          <div class="ablation-bar-group"><span class="ablation-label">Burstiness</span><div class="ablation-bar-track"><div class="ablation-bar fill-full bar-w-62"><span class="ablation-value">61.6%</span></div></div></div>
+          <div class="ablation-bar-group"><span class="ablation-label">Composite</span><div class="ablation-bar-track"><div class="ablation-bar fill-full bar-w-70"><span class="ablation-value">69.5%</span></div></div></div>
+        </div>
+        <div class="ablation-insight">The effect is stronger among analysts with technical backgrounds, consistent with heavier pre-ban adoption.</div>
+      </div>
+    </div>
+
+    <div class="screen animate-in">
+      <h2 class="screen-heading">Forecast Production Falls</h2>
+      <div class="comparison-table-container">
+        <table class="comparison-table">
+          <thead>
+            <tr><th>Outcome</th><th>Main estimate</th><th>Interpretation</th><th>Where strongest?</th></tr>
+          </thead>
+          <tbody>
+            <tr class="highlight-row"><td><span class="method-name highlight">Forecast frequency</span></td><td>-0.111 to -0.125</td><td>About 21% of the sample standard deviation fewer forecasts</td><td>Technical analysts and analysts with higher ex-ante AI-use probability</td></tr>
+            <tr><td><span class="method-name">Foreign substitution</span></td><td>No significant increase</td><td>Foreign analysts do not fully fill the information gap</td><td>No strong foreign-analyst offset</td></tr>
+            <tr><td><span class="method-name">Forecast accuracy</span></td><td>+0.946 absolute forecast error (*100)</td><td>Domestic forecasts become less accurate during the ban</td><td>Again stronger for likely AI users</td></tr>
+            <tr><td><span class="method-name">Industry information</span></td><td>+0.197</td><td>Reports rely more on broad industry or macro information</td><td>Effect stronger for likely AI users and technical analysts</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="screen animate-in">
+      <h2 class="screen-heading">How to Read the Analyst Results</h2>
+      <div class="chat-window">
+        <div class="chat-messages">
+          <div class="chat-message"><div class="chat-avatar avatar-analyst">A</div><div class="chat-bubble"><span class="chat-sender">Analyst</span><p>Before the ban, I can use ChatGPT to summarize filings, polish English, and organize sector information.</p></div></div>
+          <div class="chat-message"><div class="chat-avatar avatar-ban">B</div><div class="chat-bubble"><span class="chat-sender">Ban</span><p>For Italy-based analysts, that workflow is interrupted for almost a month.</p></div></div>
+          <div class="chat-message"><div class="chat-avatar avatar-data">D</div><div class="chat-bubble"><span class="chat-sender">Data</span><p>Reports look less AI-assisted, forecasts are fewer, and accuracy deteriorates relative to foreign analysts covering the same firms.</p></div></div>
+          <div class="chat-message"><div class="chat-avatar avatar-mechanism">M</div><div class="chat-bubble"><span class="chat-sender">Mechanism</span><p>The pattern fits a processing-cost story: when capacity falls, analysts allocate attention toward easier-to-process industry-level information.</p></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

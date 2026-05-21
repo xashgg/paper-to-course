@@ -1,0 +1,49 @@
+<section class="module" id="module-4">
+  <div class="module-content">
+    <header class="module-header animate-in">
+      <span class="module-number">04</span>
+      <h1 class="module-title">Method Deep Dive</h1>
+      <p class="module-subtitle">The paper uses a family of related regressions, all asking whether Italian exposure during the ban changes outcomes relative to suitable controls.</p>
+    </header>
+
+    <div class="screen animate-in">
+      <h2 class="screen-heading">The Core Difference-in-Differences Formula</h2>
+      <div class="formula-block">
+        <div class="formula-original">
+          <span class="formula-label">MODEL</span>
+          <div class="formula-math">Y = beta1 * ItalyAnalyst x Ban + controls + fixed effects + error</div>
+        </div>
+        <div class="formula-explanation">
+          <span class="formula-label">WHAT IT MEANS</span>
+          <div class="formula-line"><span class="formula-symbol">Y</span><span class="formula-english">The outcome: text characteristics, number of forecasts, forecast accuracy, or industry-information share.</span></div>
+          <div class="formula-line"><span class="formula-symbol">ItalyAnalyst</span><span class="formula-english">An indicator for analysts located in Italy, based on office address, email domain, or phone number.</span></div>
+          <div class="formula-line"><span class="formula-symbol">Ban</span><span class="formula-english">An indicator for the temporary ChatGPT ban period.</span></div>
+          <div class="formula-line"><span class="formula-symbol">beta1</span><span class="formula-english">The treatment effect: how much Italian analysts changed during the ban relative to comparable foreign analysts.</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="screen animate-in">
+      <h2 class="screen-heading">Three Designs, One Logic</h2>
+      <div class="step-cards">
+        <div class="step-card"><span>1</span><h3>Text evidence</h3><p>Analyst reports are scored using perplexity and burstiness. Higher values indicate a lower probability of AI-generated or AI-polished prose.</p></div>
+        <div class="step-card"><span>2</span><h3>Analyst production</h3><p>Forecast frequency compares domestic and foreign analysts covering the same firm, with firm-month and analyst-firm fixed effects.</p></div>
+        <div class="step-card"><span>3</span><h3>Market efficiency</h3><p>Firm-level tests compare Italian firms with matched European firms to see whether less analyst information changes trading outcomes.</p></div>
+      </div>
+    </div>
+
+    <div class="screen animate-in">
+      <h2 class="screen-heading">Cross-Sectional Tests Are Mechanism Tests</h2>
+      <p>The strongest effects appear among analysts more likely to have relied on ChatGPT before the ban. The paper uses two proxies: reports that looked more AI-generated before the ban, and technical education backgrounds.</p>
+      <div class="comparison-table-container">
+        <table class="comparison-table">
+          <thead><tr><th>Proxy</th><th>Why it matters</th><th>What the paper finds</th></tr></thead>
+          <tbody>
+            <tr><td><span class="method-name">Ex-ante AI text probability</span></td><td>Low composite scores before the ban suggest more AI-polished text.</td><td>Forecast decline and accuracy decline are concentrated in this group.</td></tr>
+            <tr><td><span class="method-name">Tech major</span></td><td>Technical-background analysts are plausibly earlier adopters of new tools.</td><td>The ban effect is stronger for text metrics, forecast frequency, accuracy, and industry-information reliance.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>

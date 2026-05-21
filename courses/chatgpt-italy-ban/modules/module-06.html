@@ -1,0 +1,60 @@
+<section class="module" id="module-6">
+  <div class="module-content">
+    <header class="module-header animate-in">
+      <span class="module-number">06</span>
+      <h1 class="module-title">Limitations, Takeaways, and Quiz</h1>
+      <p class="module-subtitle">The paper is strong because the shock is sharp, but its interpretation still depends on adoption, workarounds, and measurement assumptions.</p>
+    </header>
+
+    <div class="screen animate-in">
+      <h2 class="screen-heading">Main Takeaways</h2>
+      <div class="pattern-cards">
+        <div class="pattern-card"><h3>AI as infrastructure</h3><p>Generative AI appears to function as a productivity tool for analyst information processing, not merely as a writing assistant.</p></div>
+        <div class="pattern-card"><h3>Information production</h3><p>When access is removed, domestic analysts issue fewer forecasts and provide less accurate forecasts.</p></div>
+        <div class="pattern-card"><h3>Attention allocation</h3><p>Analysts shift toward broader industry and macro information when firm-specific processing becomes more costly.</p></div>
+        <div class="pattern-card"><h3>Market efficiency</h3><p>Reduced analyst processing is associated with stronger earnings reactions and wider bid-ask spreads.</p></div>
+      </div>
+    </div>
+
+    <div class="screen animate-in">
+      <h2 class="screen-heading">Caveats</h2>
+      <div class="comparison-table-container">
+        <table class="comparison-table">
+          <thead><tr><th>Concern</th><th>Why it matters</th><th>How the paper responds</th></tr></thead>
+          <tbody>
+            <tr><td><span class="method-name">VPN workarounds</span></td><td>Some Italian users could still access ChatGPT, attenuating treatment.</td><td>The authors interpret estimates as effects of reduced access, not perfect removal.</td></tr>
+            <tr><td><span class="method-name">Alternative tools</span></td><td>Users might switch to other AI services.</td><td>The ban occurred early, before close substitutes were widely available in Europe.</td></tr>
+            <tr><td><span class="method-name">Text detection noise</span></td><td>Perplexity and burstiness are imperfect measures of AI use.</td><td>Text evidence is combined with forecast behavior and market outcomes.</td></tr>
+            <tr><td><span class="method-name">Short event window</span></td><td>The ban lasted less than one month.</td><td>Dynamic tests show effects appearing during the ban and reversing after restoration.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="screen animate-in">
+      <h2 class="screen-heading">Comprehension Check</h2>
+      <div class="quiz-container" id="final-quiz">
+        <div class="quiz-question-block" data-correct="b" data-explanation-right="The design compares Italy-based analysts with foreign analysts covering the same firms during a temporary access shock." data-explanation-wrong="The core identification comes from the Italy-specific temporary ban, not from comparing all AI users with non-users.">
+          <div class="quiz-question">What is the paper's central identification strategy?</div>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="a" onclick="selectOption(this)"><span class="quiz-option-radio"></span> Compare analysts before and after ChatGPT launched globally.</button>
+            <button class="quiz-option" data-value="b" onclick="selectOption(this)"><span class="quiz-option-radio"></span> Compare Italy-based analysts to foreign analysts during Italy's temporary ChatGPT ban.</button>
+            <button class="quiz-option" data-value="c" onclick="selectOption(this)"><span class="quiz-option-radio"></span> Randomly assign analysts to use or avoid ChatGPT.</button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+        <div class="quiz-question-block" data-correct="c" data-explanation-right="The larger effects for likely adopters support the mechanism that ChatGPT access mattered for analysts' processing capacity." data-explanation-wrong="The cross-sectional tests are not decorative; they help identify whether the effect is concentrated where ChatGPT use was most likely.">
+          <div class="quiz-question">Why do technical majors and ex-ante AI-text probability matter?</div>
+          <div class="quiz-options">
+            <button class="quiz-option" data-value="a" onclick="selectOption(this)"><span class="quiz-option-radio"></span> They prove that every analyst used ChatGPT.</button>
+            <button class="quiz-option" data-value="b" onclick="selectOption(this)"><span class="quiz-option-radio"></span> They remove the need for fixed effects.</button>
+            <button class="quiz-option" data-value="c" onclick="selectOption(this)"><span class="quiz-option-radio"></span> They proxy for analysts more likely to have relied on ChatGPT before the ban.</button>
+          </div>
+          <div class="quiz-feedback"></div>
+        </div>
+        <button class="quiz-check-btn" onclick="checkQuiz('final-quiz')">Check answers</button>
+        <button class="quiz-reset-btn" onclick="resetQuiz('final-quiz')">Reset</button>
+      </div>
+    </div>
+  </div>
+</section>
