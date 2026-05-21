@@ -1,0 +1,40 @@
+{
+  "name": "paper-to-course",
+  "version": "1.0.0",
+  "description": "Transform academic papers into interactive HTML courses, Markdown notes, and PPTX slides.",
+  "author": {
+    "name": "KaguraTart",
+    "url": "https://github.com/KaguraTart"
+  },
+  "homepage": "https://github.com/KaguraTart/paper-to-course",
+  "repository": "https://github.com/KaguraTart/paper-to-course",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "skill",
+    "papers",
+    "education",
+    "pptx",
+    "html"
+  ],
+  "skills": "./SKILL.md",
+  "interface": {
+    "displayName": "Paper to Course",
+    "shortDescription": "Turn papers into HTML courses, notes, and slides.",
+    "longDescription": "Paper to Course helps Codex convert a research paper into a self-contained interactive HTML course, a Markdown study document, and a PPTX presentation for seminars or teaching.",
+    "developerName": "KaguraTart",
+    "category": "Education",
+    "capabilities": [
+      "Read",
+      "Write",
+      "Generate"
+    ],
+    "websiteURL": "https://github.com/KaguraTart/paper-to-course",
+    "defaultPrompt": [
+      "Use paper-to-course on this PDF.",
+      "Turn this paper into a course.",
+      "Generate notes and slides for this paper."
+    ],
+    "brandColor": "#D94F30"
+  }
+}
