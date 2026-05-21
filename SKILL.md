@@ -5,7 +5,7 @@ description: 将学术论文转换为交互式 HTML 课程 + Markdown 文档 + P
 
 # Paper-to-Course Skill
 
-将任意学术论文转换成交互式 HTML 课程 + Markdown 文档 + PPTX 演示文稿，**一次调用自动生成全部三种输出**。
+将任意学术论文转换成交互式 HTML 课程 + Markdown 文档 + PPTX 演示文稿，**在论文主题确认通过后，一次调用自动生成全部三种输出**。
 
 ## 使用方法
 
