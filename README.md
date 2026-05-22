@@ -2,9 +2,9 @@
 
 > Transform any academic paper into an interactive HTML course, Markdown study notes, and PPTX slides.
 
-**paper-to-course** is a Codex-ready skill for turning research papers into teaching and study materials. It produces a self-contained scroll-based course with formula breakdowns, literature timelines, method comparisons, ablation diagrams, component chats, quizzes, plus matching Markdown notes and a seminar-style slide deck.
-
 **Origin:** this repository is forked and adjusted from [KaguraTart/paper-to-course](https://github.com/KaguraTart/paper-to-course), with changes focused on Codex-oriented usage, plugin metadata, dependency setup, and local paper/course workflow.
+
+**paper-to-course** is a Codex-ready skill for turning research papers into teaching and study materials. It produces a self-contained scroll-based course with formula breakdowns, literature timelines, method comparisons, ablation diagrams, component chats, quizzes, plus matching Markdown notes and a seminar-style slide deck.
 
 **Target users:** researchers who need to quickly understand a paper, students entering a new field, and teams preparing paper-sharing or onboarding material.
 
@@ -56,6 +56,8 @@ Codex will:
 
 Put source PDFs or LaTeX projects in `papers/` before running the skill. The folder is kept in Git, but its contents are ignored by default so local papers are not committed accidentally.
 
+Generated course folders belong under `courses/`. The tracked `courses/chatgpt-italy-ban` course is kept in Git as the repository's output example; other course folders are ignored by default.
+
 ### 3. Open the course
 
 ```bash
@@ -104,6 +106,8 @@ paper-to-course/
 ├── .codex-plugin/
 │   └── plugin.json          # Codex plugin metadata
 ├── papers/                  # Local papers to process, ignored by Git
+├── courses/
+│   └── chatgpt-italy-ban/   # Tracked example output; other course folders are ignored
 ├── SKILL.md                 # Codex skill instructions
 ├── README.md                # English documentation
 ├── README_zh.md             # Chinese documentation
